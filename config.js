@@ -1,4 +1,5 @@
 // config.js
+
 const emailWrapperStart = `
 <div style="background-color: #FBF9F6; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 4px; border-top: 4px solid #113939; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
@@ -7,7 +8,7 @@ const emailWrapperStart = `
 const emailWrapperEnd = `
         <hr style="border: none; border-top: 1px solid #E5ECE9; margin: 30px 0;">
         <p style="font-size: 0.9em; color: #2A5C5C; margin: 0; line-height: 1.6;">
-            <b>DP.PORTFOLIO</b><br>
+            <b>Dominikphotofficial.lt</b><br>
             Dominik Šuškevič<br>
             Instagram: <a href="https://instagram.com/dominikphotofficial" style="color: #113939; text-decoration: none;">@dominikphotofficial</a><br>
             Web: <a href="https://portfolio.dominikphotofficial.lt" style="color: #113939; text-decoration: none;">portfolio.dominikphotofficial.lt</a>
@@ -45,6 +46,7 @@ const galleryBlockRU = `
 
 window.CONFIG = {
     ADMIN_EMAIL: "dominikphotofficial.lt@gmail.com",
+    BRAND_NAME: "Dominikphotofficial.lt",
     
     firebaseMain: {
         apiKey: "AIzaSyBxhDy4I4HZnqOAvwWE3JyjYsuy_Tg86xE",
@@ -67,7 +69,7 @@ window.CONFIG = {
     templates: {
         lt: {
             TFPConfirmed: {
-                subject: "DP.PORTFOLIO | Patvirtinta: TFP Fotosesija",
+                subject: "Dominikphotofficial.lt | Patvirtinta: TFP Fotosesija",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Puikios naujienos, {{name}}!</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Mums labai patiko jūsų idėja, todėl su džiaugsmu <b>patvirtiname</b> jūsų TFP fotosesiją.</p>
@@ -80,7 +82,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             TFPRescheduled: {
-                subject: "DP.PORTFOLIO | Atnaujinta: TFP Fotosesija",
+                subject: "Dominikphotofficial.lt | Atnaujinta: TFP Fotosesija",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Norime informuoti, kad jūsų TFP fotosesijos detalės buvo atnaujintos.</p>
@@ -93,7 +95,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             TFPCancelled: {
-                subject: "DP.PORTFOLIO | Atšaukta: TFP Fotosesija",
+                subject: "Dominikphotofficial.lt | Atšaukta: TFP Fotosesija",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Apgailestaujame, tačiau dėl nenumatytų aplinkybių turime <b>atšaukti</b> jūsų TFP fotosesiją.</p>
@@ -101,7 +103,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             TFPCompleted: {
-                subject: "DP.PORTFOLIO | Ačiū už fotosesiją!",
+                subject: "Dominikphotofficial.lt | Ačiū už fotosesiją!",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}}!</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Didelis ačiū už jūsų laiką, pastangas ir puikią nuotaiką fotosesijos metu!</p>
@@ -110,7 +112,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             ServiceConfirmed: {
-                subject: "DP.PORTFOLIO | Užsakymas patvirtintas",
+                subject: "Dominikphotofficial.lt | Užsakymas patvirtintas",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Jūsų užsakymas (<strong>{{serviceName}}</strong>) yra <b>patvirtintas</b>!</p>
@@ -125,7 +127,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             ServiceDepositPaid: {
-                subject: "DP.PORTFOLIO | Avansas gautas. Ačiū!",
+                subject: "Dominikphotofficial.lt | Avansas gautas. Ačiū!",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Sėkmingai gavome jūsų avansinį mokėjimą ({{depositAmount}} €) už paslaugą <strong>{{serviceName}}</strong>.</p>
@@ -137,7 +139,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             ServiceFullyPaid: {
-                subject: "DP.PORTFOLIO | Pilnas apmokėjimas gautas",
+                subject: "Dominikphotofficial.lt | Pilnas apmokėjimas gautas",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Informuojame, kad sėkmingai gavome pilną apmokėjimą už paslaugą <strong>{{serviceName}}</strong>.</p>
@@ -145,16 +147,16 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             ServiceCompleted: {
-                subject: "DP.PORTFOLIO | Paslauga atlikta. Ačiū!",
+                subject: "Dominikphotofficial.lt | Paslauga atlikta. Ačiū!",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Jūsų užsakymas (<strong>{{serviceName}}</strong>) yra sėkmingai atliktas!</p>
                     ${galleryBlockLT}
-                    <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ačiū, kad pasirinkote DP.PORTFOLIO. Tikimės, kad rezultatas jums patiko ir lauksime sugrįžtant ateityje.</p>
+                    <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ačiū, kad pasirinkote Dominikphotofficial.lt. Tikimės, kad rezultatas jums patiko ir lauksime sugrįžtant ateityje.</p>
                 ${emailWrapperEnd}`
             },
             ServiceCancelled: {
-                subject: "DP.PORTFOLIO | Užsakymas atšauktas",
+                subject: "Dominikphotofficial.lt | Užsakymas atšauktas",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Informuojame, kad jūsų užsakymas (<strong>{{serviceName}}</strong>) buvo atšauktas.</p>
@@ -162,7 +164,7 @@ window.CONFIG = {
                 ${emailWrapperEnd}`
             },
             ServiceStatusUpdate: {
-                subject: "DP.PORTFOLIO | Užsakymo statusas: {{status}}",
+                subject: "Dominikphotofficial.lt | Užsakymo statusas: {{status}}",
                 html: `${emailWrapperStart}
                     <h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Sveiki, {{name}},</h2>
                     <p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Informuojame, kad jūsų užsakymo (<strong>{{serviceName}}</strong>) statusas buvo atnaujintas.</p>
@@ -175,85 +177,85 @@ window.CONFIG = {
         },
         en: {
             TFPConfirmed: {
-                subject: "DP.PORTFOLIO | Confirmed: TFP Photoshoot",
+                subject: "Dominikphotofficial.lt | Confirmed: TFP Photoshoot",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Great news, {{name}}!</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We absolutely loved your idea and are thrilled to <b>confirm</b> your TFP photoshoot.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>Meeting Details:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Date & Time:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Location:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We can't wait to start creating together! See you soon.</p>${emailWrapperEnd}`
             },
             TFPRescheduled: {
-                subject: "DP.PORTFOLIO | Rescheduled: TFP Photoshoot",
+                subject: "Dominikphotofficial.lt | Rescheduled: TFP Photoshoot",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We wanted to let you know that your TFP photoshoot details have been updated.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>New Details:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Date & Time:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Location:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">If this new time doesn't work for you, please reply to this email. Thank you for your flexibility!</p>${emailWrapperEnd}`
             },
             TFPCancelled: {
-                subject: "DP.PORTFOLIO | Cancelled: TFP Photoshoot",
+                subject: "Dominikphotofficial.lt | Cancelled: TFP Photoshoot",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We sincerely apologize, but due to unforeseen circumstances, we have to <b>cancel</b> your TFP photoshoot.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We truly appreciate your interest and hope we will have the opportunity to create something beautiful together in the future.</p>${emailWrapperEnd}`
             },
             TFPCompleted: {
-                subject: "DP.PORTFOLIO | Thank you for the photoshoot!",
+                subject: "Dominikphotofficial.lt | Thank you for the photoshoot!",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}}!</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">A huge thank you for your time, effort, and great energy during the photoshoot!</p>${galleryBlockEN}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We hope you will love the final result!</p>${emailWrapperEnd}`
             },
             ServiceConfirmed: {
-                subject: "DP.PORTFOLIO | Order Confirmed. Deposit Required",
+                subject: "Dominikphotofficial.lt | Order Confirmed. Deposit Required",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Your order (<strong>{{serviceName}}</strong>) is <b>confirmed</b>!</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">To fully secure your date and time, please proceed with the deposit payment.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>Order Details:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Date & Time:</b> {{date_time}}</p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Location:</b> {{location}}</p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Total Price:</b> €{{finalPrice}}</p><p style="margin: 0; font-weight: bold; color: #113939;">Deposit to pay: €{{depositAmount}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Once the payment is made, you can reply to this email. We will send a confirmation upon receiving the deposit.</p>${emailWrapperEnd}`
             },
             ServiceDepositPaid: {
-                subject: "DP.PORTFOLIO | Deposit Received. Thank you!",
+                subject: "Dominikphotofficial.lt | Deposit Received. Thank you!",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We have successfully received your deposit payment (€{{depositAmount}}) for <strong>{{serviceName}}</strong>.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Your booking is now fully confirmed. See you at the agreed time!</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Date & Time:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Location:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">The remaining balance (€{{remainingAmount}}) can be paid after the service is completed.</p>${emailWrapperEnd}`
             },
             ServiceFullyPaid: {
-                subject: "DP.PORTFOLIO | Full Payment Received",
+                subject: "Dominikphotofficial.lt | Full Payment Received",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We would like to inform you that we have successfully received the full payment for <strong>{{serviceName}}</strong>.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Thank you very much for your cooperation!</p>${emailWrapperEnd}`
             },
             ServiceCompleted: {
-                subject: "DP.PORTFOLIO | Service Completed. Thank you!",
-                html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Your order (<strong>{{serviceName}}</strong>) has been successfully completed!</p>${galleryBlockEN}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Thank you for choosing DP.PORTFOLIO. We hope you enjoyed the result.</p>${emailWrapperEnd}`
+                subject: "Dominikphotofficial.lt | Service Completed. Thank you!",
+                html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Your order (<strong>{{serviceName}}</strong>) has been successfully completed!</p>${galleryBlockEN}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Thank you for choosing Dominikphotofficial.lt. We hope you enjoyed the result.</p>${emailWrapperEnd}`
             },
             ServiceCancelled: {
-                subject: "DP.PORTFOLIO | Order Cancelled",
+                subject: "Dominikphotofficial.lt | Order Cancelled",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We would like to inform you that your order (<strong>{{serviceName}}</strong>) has been cancelled.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">If this was a mistake or if you have any questions, please contact us.</p>${emailWrapperEnd}`
             },
             ServiceStatusUpdate: {
-                subject: "DP.PORTFOLIO | Order Status: {{status}}",
+                subject: "Dominikphotofficial.lt | Order Status: {{status}}",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Hello, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">We would like to inform you that the status of your order (<strong>{{serviceName}}</strong>) has been updated.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0; font-size: 1.1em; color: #1A2B2B;"><b>New Status:</b> <span style="color: #2A5C5C; font-weight: bold; text-transform: uppercase;">{{status}}</span></p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">If you have any questions, simply reply to this email.</p>${emailWrapperEnd}`
             }
         },
         ru: {
             TFPConfirmed: {
-                subject: "DP.PORTFOLIO | Подтверждено: TFP Фотосессия",
+                subject: "Dominikphotofficial.lt | Подтверждено: TFP Фотосессия",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Отличные новости, {{name}}!</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Нам безумно понравилась ваша идея, и мы с радостью <b>подтверждаем</b> вашу TFP фотосессию.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>Детали встречи:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Дата и время:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Место:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">С нетерпением ждем начала совместного творчества! До скорой встречи.</p>${emailWrapperEnd}`
             },
             TFPRescheduled: {
-                subject: "DP.PORTFOLIO | Обновлено: TFP Фотосессия",
+                subject: "Dominikphotofficial.lt | Обновлено: TFP Фотосессия",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Хотим сообщить, что детали вашей TFP фотосессии были обновлены.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>Новая информация:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Дата и время:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Место:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Если это новое время вам не подходит, пожалуйста, ответьте на это письмо. Спасибо за вашу гибкость!</p>${emailWrapperEnd}`
             },
             TFPCancelled: {
-                subject: "DP.PORTFOLIO | Отменено: TFP Фотосессия",
+                subject: "Dominikphotofficial.lt | Отменено: TFP Фотосессия",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Приносим свои извинения, но из-за непредвиденных обстоятельств мы вынуждены <b>отменить</b> вашу TFP фотосессию.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Мы очень ценим ваше желание сотрудничать и надеемся, что в будущем у нас появится возможность создать что-то красивое вместе.</p>${emailWrapperEnd}`
             },
             TFPCompleted: {
-                subject: "DP.PORTFOLIO | Спасибо за фотосессию!",
+                subject: "Dominikphotofficial.lt | Спасибо за фотосессию!",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}}!</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Огромное спасибо за ваше время, старания и отличную атмосферу во время фотосессии!</p>${galleryBlockRU}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Надеемся, результат вам очень понравится!</p>${emailWrapperEnd}`
             },
             ServiceConfirmed: {
-                subject: "DP.PORTFOLIO | Заказ подтвержден. Требуется аванс",
+                subject: "Dominikphotofficial.lt | Заказ подтвержден. Требуется аванс",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ваш заказ (<strong>{{serviceName}}</strong>) <b>подтвержден</b>!</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Чтобы окончательно забронировать дату и время, пожалуйста, внесите аванс.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 10px 0; color: #113939; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;"><b>Детали заказа:</b></p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Дата и время:</b> {{date_time}}</p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Место:</b> {{location}}</p><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Общая стоимость:</b> €{{finalPrice}}</p><p style="margin: 0; font-weight: bold; color: #113939;">Сумма аванса: €{{depositAmount}}</p></div><p style="color: #1A2B2B; font-size: 16px; margin-bottom: 10px; color: #1A2B2B;"><b>Инструкции по оплате:</b></p><p style="color: #1A2B2B; font-size: 16px; margin: 0 0 5px 0; color: #1A2B2B;">Реквизиты банка: <b>{{bankDetails}}</b></p><p style="color: #1A2B2B; font-size: 16px; margin: 0 0 15px 0; color: #1A2B2B;">PayPal: <b>{{paypalEmail}}</b></p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">После оплаты вы можете ответить на это письмо. Как только мы получим аванс, мы пришлем подтверждение.</p>${emailWrapperEnd}`
             },
             ServiceDepositPaid: {
-                subject: "DP.PORTFOLIO | Аванс получен. Спасибо!",
+                subject: "Dominikphotofficial.lt | Аванс получен. Спасибо!",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Мы успешно получили ваш аванс (€{{depositAmount}}) за услугу <strong>{{serviceName}}</strong>.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ваше бронирование полностью подтверждено. До встречи в назначенное время!</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0 0 5px 0; color: #1A2B2B;"><b>Дата и время:</b> {{date_time}}</p><p style="margin: 0; color: #1A2B2B;"><b>Место:</b> {{location}}</p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Остаток (€{{remainingAmount}}) можно будет оплатить после выполнения услуги.</p>${emailWrapperEnd}`
             },
             ServiceFullyPaid: {
-                subject: "DP.PORTFOLIO | Полная оплата получена",
+                subject: "Dominikphotofficial.lt | Полная оплата получена",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Сообщаем, что мы успешно получили полную оплату за услугу <strong>{{serviceName}}</strong>.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Огромное спасибо за сотрудничество!</p>${emailWrapperEnd}`
             },
             ServiceCompleted: {
-                subject: "DP.PORTFOLIO | Услуга выполнена. Спасибо!",
-                html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ваш заказ (<strong>{{serviceName}}</strong>) успешно выполнен!</p>${galleryBlockRU}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Спасибо, что выбрали DP.PORTFOLIO. Надеемся, вам понравился результат.</p>${emailWrapperEnd}`
+                subject: "Dominikphotofficial.lt | Услуга выполнена. Спасибо!",
+                html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Ваш заказ (<strong>{{serviceName}}</strong>) успешно выполнен!</p>${galleryBlockRU}<p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Спасибо, что выбрали Dominikphotofficial.lt. Надеемся, вам понравился результат.</p>${emailWrapperEnd}`
             },
             ServiceCancelled: {
-                subject: "DP.PORTFOLIO | Заказ отменен",
+                subject: "Dominikphotofficial.lt | Заказ отменен",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Сообщаем, что ваш заказ (<strong>{{serviceName}}</strong>) был отменен.</p><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Если это произошло по ошибке или у вас есть вопросы, пожалуйста, свяжитесь с нами.</p>${emailWrapperEnd}`
             },
             ServiceStatusUpdate: {
-                subject: "DP.PORTFOLIO | Статус заказа: {{status}}",
+                subject: "Dominikphotofficial.lt | Статус заказа: {{status}}",
                 html: `${emailWrapperStart}<h2 style="color: #113939; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">Здравствуйте, {{name}},</h2><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Хотим сообщить, что статус вашего заказа (<strong>{{serviceName}}</strong>) был обновлен.</p><div style="background: #FBF9F6; padding: 20px; border-left: 3px solid #113939; margin: 25px 0;"><p style="margin: 0; font-size: 1.1em; color: #1A2B2B;"><b>Новый статус:</b> <span style="color: #2A5C5C; font-weight: bold; text-transform: uppercase;">{{status}}</span></p></div><p style="color: #1A2B2B; font-size: 16px; line-height: 1.6;">Если у вас есть вопросы, просто ответьте на это письмо.</p>${emailWrapperEnd}`
             }
         }
