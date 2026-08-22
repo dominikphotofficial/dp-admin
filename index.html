@@ -5,10 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DP - ADMIN | Dominik Photo Official</title>
-  
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
@@ -16,78 +14,48 @@
 </head>
 <body>
 
-  <div id="preloader">
-    <div class="loader"></div>
-  </div>
+  <div id="preloader"><div class="loader"></div></div>
 
   <div id="auth-overlay">
     <div class="auth-card">
       <h2>DP - ADMIN</h2>
       <div class="divider" style="margin: 10px auto 20px auto;"></div>
       <p>Prisijunkite su įgaliotu el. paštu: <strong>dominikphotofficial.lt@gmail.com</strong></p>
-      
       <div style="text-align: left;">
         <label class="field-label">Administratoriaus El. Paštas</label>
         <input type="email" id="login-email" class="form-input" value="dominikphotofficial.lt@gmail.com" required>
-        
         <label class="field-label">Slaptažodis</label>
         <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-        
-        <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">
-          Prisijungti prie skydo
-        </button>
+        <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">Prisijungti prie skydo</button>
       </div>
     </div>
   </div>
 
   <div id="app-layout">
-    
     <aside id="sidebar">
       <div class="brand-wrap">
         <div class="brand-title">DP - ADMIN</div>
         <div class="brand-sub">Dominik Photo Official</div>
       </div>
-
       <ul class="sidebar-menu">
-        <li class="menu-item active" data-view="dashboard">
-          <button><i class="fa-solid fa-chart-pie"></i> Apžvalga <span class="badge-counter" id="badge-leads-count">0</span></button>
-        </li>
-        <li class="menu-item" data-view="leads">
-          <button><i class="fa-solid fa-envelope-open-text"></i> Užklausos & TFP <span class="badge-counter" id="badge-new-leads">0</span></button>
-        </li>
-        <li class="menu-item" data-view="galleries">
-          <button><i class="fa-solid fa-images"></i> Klientų Portalas <span class="badge-counter" id="badge-galleries-count">0</span></button>
-        </li>
-        <li class="menu-item" data-view="portfolio">
-          <button><i class="fa-solid fa-camera-retro"></i> Portfelio TVS</button>
-        </li>
-        <li class="menu-item" data-view="settings">
-          <button><i class="fa-solid fa-sliders"></i> Nustatymai & TG</button>
-        </li>
+        <li class="menu-item active" data-view="dashboard"><button><i class="fa-solid fa-chart-pie"></i> Apžvalga <span class="badge-counter" id="badge-leads-count">0</span></button></li>
+        <li class="menu-item" data-view="leads"><button><i class="fa-solid fa-envelope-open-text"></i> Užklausos & TFP <span class="badge-counter" id="badge-new-leads">0</span></button></li>
+        <li class="menu-item" data-view="galleries"><button><i class="fa-solid fa-images"></i> Klientų Portalas <span class="badge-counter" id="badge-galleries-count">0</span></button></li>
+        <li class="menu-item" data-view="portfolio"><button><i class="fa-solid fa-camera-retro"></i> Portfelio TVS</button></li>
+        <li class="menu-item" data-view="settings"><button><i class="fa-solid fa-sliders"></i> Nustatymai & TG</button></li>
       </ul>
-
       <div class="sidebar-status">
-        <div class="api-badge">
-          <span><span class="status-dot" id="status-main"></span> API 1: Portfolio/TFP</span>
-          <span style="font-size: 0.7em;">tfp-form</span>
-        </div>
-        <div class="api-badge">
-          <span><span class="status-dot" id="status-clients"></span> API 2: Klientai</span>
-          <span style="font-size: 0.7em;">clients-dp</span>
-        </div>
+        <div class="api-badge"><span><span class="status-dot" id="status-main"></span> API 1: Portfolio/TFP</span><span style="font-size: 0.7em;">tfp-form</span></div>
+        <div class="api-badge"><span><span class="status-dot" id="status-clients"></span> API 2: Klientai</span><span style="font-size: 0.7em;">clients-dp</span></div>
       </div>
     </aside>
 
     <div id="main-content">
-      
       <header class="admin-header">
         <div style="display: flex; align-items: center; gap: 15px;">
           <button class="burger-admin" id="btn-toggle-sidebar"><i class="fa-solid fa-bars"></i></button>
-          <div class="header-title-box">
-            <h2 id="page-header-title">Apžvalga ir Rodikliai</h2>
-          </div>
+          <div class="header-title-box"><h2 id="page-header-title">Apžvalga ir Rodikliai</h2></div>
         </div>
-
         <div class="admin-profile">
           <span class="user-email-tag" id="display-admin-email">dominikphotofficial.lt@gmail.com</span>
           <button class="btn-logout" id="btn-logout">Atsijungti</button>
@@ -95,56 +63,32 @@
       </header>
 
       <main class="content-wrapper">
-
         <section id="view-dashboard" class="view-section active">
           <div class="stats-grid">
             <div class="stat-box">
-              <div class="stat-header">
-                <span>Naujos Užklausos</span>
-                <i class="fa-solid fa-inbox" style="color: var(--accent-light);"></i>
-              </div>
+              <div class="stat-header"><span>Naujos Užklausos</span><i class="fa-solid fa-inbox" style="color: var(--accent-light);"></i></div>
               <div class="stat-value" id="stat-leads-new">0</div>
               <div class="stat-footer">Laukia peržiūros arba patvirtinimo</div>
             </div>
-
             <div class="stat-box">
-              <div class="stat-header">
-                <span>Klientų Galerijos</span>
-                <i class="fa-solid fa-photo-film" style="color: var(--accent-light);"></i>
-              </div>
+              <div class="stat-header"><span>Klientų Galerijos</span><i class="fa-solid fa-photo-film" style="color: var(--accent-light);"></i></div>
               <div class="stat-value" id="stat-galleries-count">0</div>
               <div class="stat-footer">Aktyvios sesijos (API 2)</div>
             </div>
-
             <div class="stat-box">
-              <div class="stat-header">
-                <span>Portfolio Projektai</span>
-                <i class="fa-solid fa-layer-group" style="color: var(--accent-light);"></i>
-              </div>
+              <div class="stat-header"><span>Portfolio Projektai</span><i class="fa-solid fa-layer-group" style="color: var(--accent-light);"></i></div>
               <div class="stat-value" id="stat-portfolio-count">0</div>
               <div class="stat-footer">Publikuota portfolio.dominikphotofficial.lt</div>
             </div>
           </div>
-
           <div class="panel-card">
             <div class="panel-header">
               <div class="panel-title">Paskutinės Gautos Užklausos</div>
-              <button class="cta-button" style="padding: 6px 14px; font-size: 0.75rem;" onclick="switchView('leads')">
-                Visos užklausos <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
-              </button>
+              <button class="cta-button" style="padding: 6px 14px; font-size: 0.75rem;" onclick="switchView('leads')">Visos užklausos <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></button>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Kalba</th>
-                    <th>Klientas</th>
-                    <th>Paslauga / Tipas</th>
-                    <th>Data</th>
-                    <th>Būsena</th>
-                    <th>Veiksmas</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Kalba</th><th>Klientas</th><th>Paslauga / Tipas</th><th>Data</th><th>Būsena</th><th>Veiksmas</th></tr></thead>
                 <tbody id="table-recent-leads"></tbody>
               </table>
             </div>
@@ -158,33 +102,16 @@
               <div class="panel-actions">
                 <input type="text" id="search-leads" class="form-input" style="width: 240px; padding: 8px 12px;" placeholder="Paieška pagal vardą, el. paštą...">
                 <select id="filter-lead-lang" class="form-select" style="width: 130px; padding: 8px 10px;">
-                  <option value="all">Visos kalbos</option>
-                  <option value="LT">Lietuvių (LT)</option>
-                  <option value="EN">English (EN)</option>
-                  <option value="RU">Русский (RU)</option>
+                  <option value="all">Visos kalbos</option><option value="LT">Lietuvių (LT)</option><option value="EN">English (EN)</option><option value="RU">Русский (RU)</option>
                 </select>
                 <select id="filter-lead-status" class="form-select" style="width: 140px; padding: 8px 10px;">
-                  <option value="all">Visos būsenos</option>
-                  <option value="new">Naujas</option>
-                  <option value="in_progress">Vykdoma</option>
-                  <option value="answered">Atsakyta</option>
-                  <option value="archived">Archyvas</option>
+                  <option value="all">Visos būsenos</option><option value="new">Naujas</option><option value="in_progress">Vykdoma</option><option value="answered">Atsakyta</option><option value="archived">Archyvas</option>
                 </select>
               </div>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Kalba</th>
-                    <th>Klientas</th>
-                    <th>Kontaktai</th>
-                    <th>Paslauga / Idėja</th>
-                    <th>Gauta</th>
-                    <th>Būsena</th>
-                    <th>Veiksmai</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Kalba</th><th>Klientas</th><th>Kontaktai</th><th>Paslauga / Idėja</th><th>Gauta</th><th>Būsena</th><th>Veiksmai</th></tr></thead>
                 <tbody id="table-all-leads"></tbody>
               </table>
             </div>
@@ -194,9 +121,7 @@
         <section id="view-galleries" class="view-section">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
             <input type="text" id="search-galleries" class="form-input" style="width: 300px;" placeholder="Ieškoti sesijos ar žetono...">
-            <button class="cta-button btn-solid" id="btn-open-new-gallery-modal">
-              <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i> Įkelti Kliento Fotosesiją
-            </button>
+            <button class="cta-button btn-solid" id="btn-open-new-gallery-modal"><i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i> Įkelti Kliento Fotosesiją</button>
           </div>
           <div class="items-grid" id="grid-galleries"></div>
         </section>
@@ -204,25 +129,19 @@
         <section id="view-portfolio" class="view-section">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
             <input type="text" id="search-portfolio" class="form-input" style="width: 300px;" placeholder="Ieškoti projektų...">
-            <button class="cta-button btn-solid" id="btn-open-new-portfolio-modal">
-              <i class="fa-solid fa-plus" style="margin-right: 8px;"></i> Naujas Portfolio Projektas
-            </button>
+            <button class="cta-button btn-solid" id="btn-open-new-portfolio-modal"><i class="fa-solid fa-plus" style="margin-right: 8px;"></i> Naujas Portfolio Projektas</button>
           </div>
           <div class="items-grid" id="grid-portfolio"></div>
         </section>
 
         <section id="view-settings" class="view-section">
           <div class="panel-card" style="max-width: 650px;">
-            <div class="panel-header">
-              <div class="panel-title"><i class="fa-brands fa-telegram" style="color: var(--accent-light); margin-right: 8px;"></i> Telegram Bot Konfigūracija</div>
-            </div>
+            <div class="panel-header"><div class="panel-title"><i class="fa-brands fa-telegram" style="color: var(--accent-light); margin-right: 8px;"></i> Telegram Bot Konfigūracija</div></div>
             <div style="padding: 30px;">
               <label class="field-label" style="margin-top: 0;">Telegram Bot Token</label>
               <input type="password" id="setting-tg-token" class="form-input" placeholder="7123456789:AAHk...">
-
               <label class="field-label">Telegram Chat ID / Channel ID</label>
               <input type="text" id="setting-tg-chat-id" class="form-input" placeholder="-1001234567890 arba 12345678">
-
               <div style="display: flex; gap: 12px; margin-top: 25px;">
                 <button class="cta-button btn-solid" id="btn-save-settings">Išsaugoti Parametrus</button>
                 <button class="cta-button" id="btn-test-telegram"><i class="fa-solid fa-paper-plane"></i> Testuoti Botą</button>
@@ -230,115 +149,73 @@
             </div>
           </div>
         </section>
-
       </main>
     </div>
   </div>
 
+  <!-- Modals -->
   <div class="modal-overlay" id="modal-lead">
-    <div class="modal-card" style="max-width: 750px;">
+    <div class="modal-card" style="max-width: 800px;">
       <div class="modal-header">
         <h3 id="lead-modal-title">Užklausos Valdymas & Atsakymas</h3>
         <button class="action-icon-btn" onclick="closeModal('modal-lead')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="modal-body">
-        
         <div class="grid-2">
-          <div>
-            <span class="field-label" style="margin-top: 0;">Kliento Vardas</span>
-            <div id="lead-modal-name" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-color);">-</div>
-          </div>
-          <div>
-            <span class="field-label" style="margin-top: 0;">Kalbos Versija</span>
-            <div id="lead-modal-lang-badge">-</div>
-          </div>
+          <div><span class="field-label" style="margin-top: 0;">Kliento Vardas</span><div id="lead-modal-name" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-color);">-</div></div>
+          <div><span class="field-label" style="margin-top: 0;">Kalbos Versija</span><div id="lead-modal-lang-badge">-</div></div>
         </div>
-
         <div class="grid-2" style="margin-top: 15px;">
-          <div>
-            <span class="field-label" style="margin-top: 0;">El. Paštas</span>
-            <div id="lead-modal-email" style="font-weight: 500;">-</div>
-          </div>
-          <div>
-            <span class="field-label" style="margin-top: 0;">Telefonas / Instagram</span>
-            <div id="lead-modal-phone">-</div>
-          </div>
+          <div><span class="field-label" style="margin-top: 0;">El. Paštas</span><div id="lead-modal-email" style="font-weight: 500;">-</div></div>
+          <div><span class="field-label" style="margin-top: 0;">Telefonas / Instagram</span><div id="lead-modal-phone">-</div></div>
         </div>
-
         <span class="field-label">Pranešimas / Užklausos Idėja</span>
-        <div id="lead-modal-message" style="background: var(--bg-color); border: 1px solid var(--border-subtle); padding: 14px; font-size: 0.9rem; margin-bottom: 20px;">
-          -
-        </div>
+        <div id="lead-modal-message" style="background: var(--bg-color); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 14px; font-size: 0.9rem; margin-bottom: 20px;">-</div>
 
         <div class="grid-2">
           <div>
             <label class="field-label" style="margin-top: 0;">Keisti Būseną</label>
             <select id="lead-modal-status-select" class="form-select">
-              <option value="new">Naujas (New)</option>
-              <option value="in_progress">Vykdoma (In Progress)</option>
-              <option value="answered">Atsakyta (Answered)</option>
-              <option value="archived">Archyvas (Archived)</option>
+              <option value="new">Naujas (New)</option><option value="in_progress">Vykdoma (In Progress)</option><option value="answered">Atsakyta (Answered)</option><option value="archived">Archyvas (Archived)</option>
             </select>
           </div>
           <div>
             <label class="field-label" style="margin-top: 0;">Pasirinkti Šabloną</label>
             <select id="lead-modal-template-select" class="form-select">
               <optgroup label="TFP Šablonai">
-                <option value="New">TFP: Nauja užklausa</option>
-                <option value="TFPConfirmed">TFP: Patvirtinta</option>
-                <option value="TFPRescheduled">TFP: Perkelta data</option>
-                <option value="TFPCancelled">TFP: Atšaukta</option>
-                <option value="TFPCompleted">TFP: Užbaigta & Nuotraukos</option>
+                <option value="New">TFP: Nauja užklausa</option><option value="TFPConfirmed">TFP: Patvirtinta</option><option value="TFPRescheduled">TFP: Perkelta data</option><option value="TFPCancelled">TFP: Atšaukta</option><option value="TFPCompleted">TFP: Užbaigta & Nuotraukos</option>
               </optgroup>
               <optgroup label="Komercinės Paslaugos">
-                <option value="ServiceNew">Paslauga: Užklausa gauta</option>
-                <option value="ServiceConfirmed">Paslauga: Patvirtinta (Reikia avanso)</option>
-                <option value="ServiceDepositPaid">Paslauga: Avansas gautas</option>
-                <option value="ServiceFullyPaid">Paslauga: Pilnai apmokėta</option>
-                <option value="ServiceCompleted">Paslauga: Atlikta (Dovana -10%)</option>
-                <option value="ServiceCancelled">Paslauga: Atšaukta</option>
-                <option value="ServiceStatusUpdate">Paslauga: Būsenos atnaujinimas</option>
+                <option value="ServiceNew">Paslauga: Užklausa gauta</option><option value="ServiceConfirmed">Paslauga: Patvirtinta (Reikia avanso)</option><option value="ServiceDepositPaid">Paslauga: Avansas gautas</option><option value="ServiceFullyPaid">Paslauga: Pilnai apmokėta</option><option value="ServiceCompleted">Paslauga: Atlikta (Dovana -10%)</option><option value="ServiceCancelled">Paslauga: Atšaukta</option><option value="ServiceStatusUpdate">Paslauga: Būsenos atnaujinimas</option>
               </optgroup>
             </select>
           </div>
         </div>
 
         <div class="grid-2" style="margin-top: 15px;">
-          <div>
-            <label class="field-label" style="margin-top: 0;">Data ir laikas ({{date_time}})</label>
-            <input type="text" id="tpl-var-datetime" class="form-input" placeholder="2026-09-01 14:00">
-          </div>
-          <div>
-            <label class="field-label" style="margin-top: 0;">Vieta ({{location}})</label>
-            <input type="text" id="tpl-var-location" class="form-input" placeholder="Vilniaus Senamiestis">
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">Data ir laikas</label><input type="text" id="tpl-var-datetime" class="form-input tpl-trigger" placeholder="2026-09-01 14:00"></div>
+          <div><label class="field-label" style="margin-top: 0;">Vieta</label><input type="text" id="tpl-var-location" class="form-input tpl-trigger" placeholder="Vilniaus Senamiestis"></div>
         </div>
-
         <div class="grid-2" style="margin-top: 10px;">
-          <div>
-            <label class="field-label" style="margin-top: 0;">Paslaugos Pavadinimas ({{serviceName}})</label>
-            <input type="text" id="tpl-var-service" class="form-input" placeholder="Portretinė fotosesija">
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">Paslaugos Pavadinimas</label><input type="text" id="tpl-var-service" class="form-input tpl-trigger" placeholder="Portretinė fotosesija"></div>
           <div>
             <label class="field-label" style="margin-top: 0;">Kaina / Avansas (€)</label>
             <div style="display: flex; gap: 8px;">
-              <input type="text" id="tpl-var-price" class="form-input" placeholder="Kaina (150)">
-              <input type="text" id="tpl-var-deposit" class="form-input" placeholder="Avansas (75)">
+              <input type="text" id="tpl-var-price" class="form-input tpl-trigger" placeholder="Kaina (150)">
+              <input type="text" id="tpl-var-deposit" class="form-input tpl-trigger" placeholder="Avansas (75)">
             </div>
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 8px 0;">
-          <span class="field-label" style="margin: 0;">Generuotas HTML Laiško Šablonas: <b id="tpl-preview-subject" style="color: var(--accent-color); font-family: var(--font-body);"></b></span>
+          <span class="field-label" style="margin: 0;">Generuotas HTML Laiško Šablonas: <b id="tpl-preview-subject" style="color: var(--accent-color); font-family: var(--font-body); text-transform: none;"></b></span>
           <div style="display: flex; gap: 6px;">
-            <button class="cta-button" style="padding: 3px 8px; font-size: 0.7rem;" onclick="setTemplateLang('lt')">LT</button>
-            <button class="cta-button" style="padding: 3px 8px; font-size: 0.7rem;" onclick="setTemplateLang('en')">EN</button>
-            <button class="cta-button" style="padding: 3px 8px; font-size: 0.7rem;" onclick="setTemplateLang('ru')">RU</button>
+            <button class="cta-button" style="padding: 4px 10px; font-size: 0.7rem;" onclick="setTemplateLang('lt')">LT</button>
+            <button class="cta-button" style="padding: 4px 10px; font-size: 0.7rem;" onclick="setTemplateLang('en')">EN</button>
+            <button class="cta-button" style="padding: 4px 10px; font-size: 0.7rem;" onclick="setTemplateLang('ru')">RU</button>
           </div>
         </div>
-
         <div class="template-output" id="lead-modal-html-output"></div>
-
       </div>
       <div class="modal-footer">
         <button class="cta-button" id="btn-lead-send-tg"><i class="fa-brands fa-telegram"></i> Į Telegram</button>
@@ -350,115 +227,51 @@
 
   <div class="modal-overlay" id="modal-gallery">
     <div class="modal-card">
-      <div class="modal-header">
-        <h3>Nauja Kliento Galerija (API 2)</h3>
-        <button class="action-icon-btn" onclick="closeModal('modal-gallery')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
+      <div class="modal-header"><h3>Nauja Kliento Galerija (API 2)</h3><button class="action-icon-btn" onclick="closeModal('modal-gallery')"><i class="fa-solid fa-xmark"></i></button></div>
       <div class="modal-body">
         <div class="grid-2">
-          <div>
-            <label class="field-label" style="margin-top: 0;">Kliento Vardas / Projektas *</label>
-            <input type="text" id="gal-client-name" class="form-input" placeholder="Justina & Tomas">
-          </div>
-          <div>
-            <label class="field-label" style="margin-top: 0;">Tipas</label>
-            <select id="gal-shoot-type" class="form-select">
-              <option value="Wedding">Vestuvės (Wedding)</option>
-              <option value="Portrait">Portretas (Portrait)</option>
-              <option value="LoveStory">Love Story</option>
-              <option value="Commercial">Komercinė / Brand</option>
-              <option value="TFP">TFP Projektas</option>
-            </select>
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">Kliento Vardas / Projektas *</label><input type="text" id="gal-client-name" class="form-input" placeholder="Justina & Tomas"></div>
+          <div><label class="field-label" style="margin-top: 0;">Tipas</label><select id="gal-shoot-type" class="form-select"><option value="Wedding">Vestuvės (Wedding)</option><option value="Portrait">Portretas (Portrait)</option><option value="LoveStory">Love Story</option><option value="Commercial">Komercinė / Brand</option><option value="TFP">TFP Projektas</option></select></div>
         </div>
-
         <div class="grid-2" style="margin-top: 15px;">
-          <div>
-            <label class="field-label" style="margin-top: 0;">Fotosesijos Data</label>
-            <input type="date" id="gal-shoot-date" class="form-input">
-          </div>
-          <div>
-            <label class="field-label" style="margin-top: 0;">Būsena</label>
-            <select id="gal-shoot-status" class="form-select">
-              <option value="ready">Paruošta (Ready)</option>
-              <option value="paid">Apmokėta (Paid)</option>
-              <option value="locked">Užrakinta (Locked)</option>
-            </select>
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">Fotosesijos Data</label><input type="date" id="gal-shoot-date" class="form-input"></div>
+          <div><label class="field-label" style="margin-top: 0;">Būsena</label><select id="gal-shoot-status" class="form-select"><option value="ready">Paruošta (Ready)</option><option value="paid">Apmokėta (Paid)</option><option value="locked">Užrakinta (Locked)</option></select></div>
         </div>
-
         <div class="grid-2" style="margin-top: 15px;">
-          <div>
-            <label class="field-label" style="margin-top: 0;">PIN Slaptažodis</label>
-            <input type="text" id="gal-shoot-pin" class="form-input" placeholder="pvz., 5588">
-          </div>
-          <div>
-            <label class="field-label" style="margin-top: 0;">Prieigos Žetonas (Token)</label>
-            <div style="display: flex; gap: 8px;">
-              <input type="text" id="gal-shoot-token" class="form-input" readonly style="font-family: monospace;">
-              <button class="action-icon-btn" onclick="generateGalleryToken()"><i class="fa-solid fa-rotate"></i></button>
-            </div>
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">PIN Slaptažodis</label><input type="text" id="gal-shoot-pin" class="form-input" placeholder="pvz., 5588"></div>
+          <div><label class="field-label" style="margin-top: 0;">Prieigos Žetonas (Token)</label><div style="display: flex; gap: 8px;"><input type="text" id="gal-shoot-token" class="form-input" readonly style="font-family: monospace;"><button class="action-icon-btn" onclick="generateGalleryToken()"><i class="fa-solid fa-rotate"></i></button></div></div>
         </div>
-
         <label class="field-label" style="margin-top: 20px;">Viršelio arba Sesijos Nuotrauka</label>
         <div class="file-upload-box">
           <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--accent-color); margin-bottom: 8px;"></i>
           <div style="font-size: 0.85rem; font-family: var(--font-heading);">Pasirinkite failą įkėlimui į Storage</div>
           <input type="file" id="gal-file-input" accept="image/*">
         </div>
-        <div class="progress-container" id="gal-progress-box">
-          <div class="progress-bar" id="gal-progress-bar"></div>
-        </div>
+        <div class="progress-container" id="gal-progress-box"><div class="progress-bar" id="gal-progress-bar"></div></div>
       </div>
-      <div class="modal-footer">
-        <button class="cta-button" onclick="closeModal('modal-gallery')">Atšaukti</button>
-        <button class="cta-button btn-solid" id="btn-save-gallery">Sukurti Galeriją</button>
-      </div>
+      <div class="modal-footer"><button class="cta-button" onclick="closeModal('modal-gallery')">Atšaukti</button><button class="cta-button btn-solid" id="btn-save-gallery">Sukurti Galeriją</button></div>
     </div>
   </div>
 
   <div class="modal-overlay" id="modal-portfolio">
     <div class="modal-card">
-      <div class="modal-header">
-        <h3>Pridėti Portfolio Projektą (API 1)</h3>
-        <button class="action-icon-btn" onclick="closeModal('modal-portfolio')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
+      <div class="modal-header"><h3>Pridėti Portfolio Projektą (API 1)</h3><button class="action-icon-btn" onclick="closeModal('modal-portfolio')"><i class="fa-solid fa-xmark"></i></button></div>
       <div class="modal-body">
         <div class="grid-2">
-          <div>
-            <label class="field-label" style="margin-top: 0;">Pavadinimas *</label>
-            <input type="text" id="port-title" class="form-input" placeholder="Vilnius Nocturne">
-          </div>
-          <div>
-            <label class="field-label" style="margin-top: 0;">Kategorija</label>
-            <select id="port-category" class="form-select">
-              <option value="Portrait">Portrait</option>
-              <option value="Fashion">Fashion & Editorial</option>
-              <option value="Street">Street</option>
-              <option value="Wedding">Wedding</option>
-              <option value="TFP">TFP Special</option>
-            </select>
-          </div>
+          <div><label class="field-label" style="margin-top: 0;">Pavadinimas *</label><input type="text" id="port-title" class="form-input" placeholder="Vilnius Nocturne"></div>
+          <div><label class="field-label" style="margin-top: 0;">Kategorija</label><select id="port-category" class="form-select"><option value="Portrait">Portrait</option><option value="Fashion">Fashion & Editorial</option><option value="Street">Street</option><option value="Wedding">Wedding</option><option value="TFP">TFP Special</option></select></div>
         </div>
-
         <label class="field-label" style="margin-top: 15px;">Aprašymas</label>
         <textarea id="port-desc" class="form-textarea" rows="3" placeholder="Projekto vizija, apšvietimas..."></textarea>
-
         <label class="field-label" style="margin-top: 15px;">Viršelio Nuotrauka</label>
         <div class="file-upload-box">
           <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-color); margin-bottom: 6px;"></i>
           <div style="font-size: 0.85rem; font-family: var(--font-heading);">Įkelti projekto nuotrauką</div>
           <input type="file" id="port-file-input" accept="image/*">
         </div>
-        <div class="progress-container" id="port-progress-box">
-          <div class="progress-bar" id="port-progress-bar"></div>
-        </div>
+        <div class="progress-container" id="port-progress-box"><div class="progress-bar" id="port-progress-bar"></div></div>
       </div>
-      <div class="modal-footer">
-        <button class="cta-button" onclick="closeModal('modal-portfolio')">Atšaukti</button>
-        <button class="cta-button btn-solid" id="btn-save-portfolio">Publikuoti</button>
-      </div>
+      <div class="modal-footer"><button class="cta-button" onclick="closeModal('modal-portfolio')">Atšaukti</button><button class="cta-button btn-solid" id="btn-save-portfolio">Publikuoti</button></div>
     </div>
   </div>
 
