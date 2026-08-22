@@ -1,6 +1,6 @@
 // app.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
@@ -24,7 +24,7 @@ const state = {
     tgChatId: localStorage.getItem('dp_admin_tg_chat_id') || ''
 };
 
-// Auth
+// --- AUTHENTICATION ---
 onAuthStateChanged(authMain, (user) => {
     const preloader = document.getElementById('preloader');
     if (preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
@@ -51,7 +51,7 @@ document.getElementById('btn-login-auth').addEventListener('click', async () => 
 
 document.getElementById('btn-logout').addEventListener('click', () => { signOut(authMain).then(() => showToast("Atsijungta", "info")); });
 
-// Utils
+// --- UTILS ---
 window.showToast = function(msg, type = 'info') {
     const wrap = document.getElementById('toast-wrap');
     const toast = document.createElement('div');
@@ -67,7 +67,7 @@ function escapeHtml(str) { return str ? String(str).replace(/&/g, '&amp;').repla
 window.openModal = function(id) { document.getElementById(id).classList.add('active'); };
 window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 
-// Navigation
+// --- NAVIGATION ---
 window.switchView = function(viewName) {
     state.currentView = viewName;
     document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('active', item.getAttribute('data-view') === viewName));
@@ -99,7 +99,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// Data Listeners
+// --- DATA LISTENERS ---
 function initDataListeners() {
     onSnapshot(query(collection(dbMain, "tfp_requests"), orderBy("createdAt", "desc")), (snap) => {
         state.tfpRequests = []; snap.forEach(doc => state.tfpRequests.push({ id: doc.id, ...doc.data() })); renderTFP(); updateStats();
@@ -124,7 +124,7 @@ function updateStats() {
     document.getElementById('badge-gal-count').innerText = state.galleries.length;
 }
 
-// Render Requests
+// --- RENDER REQUESTS ---
 function renderTFP() {
     const list = document.getElementById('tfp-list');
     if (!state.tfpRequests.length) { list.innerHTML = '<div class="empty-placeholder">TFP užklausų nėra.</div>'; return; }
@@ -204,7 +204,7 @@ function renderServices() {
     `).join('');
 }
 
-// Email Logic
+// --- EMAIL LOGIC ---
 window.prepareTFP = function(id, lang, email, name, idea) {
     const newStatus = document.getElementById(`status-${id}`).value;
     const newDate = document.getElementById(`dt-${id}`).value;
@@ -286,7 +286,7 @@ window.deleteDocRecord = async function(collectionName, id) {
     }
 };
 
-// Galleries
+// --- GALLERIES ---
 function renderGalleries() {
     const container = document.getElementById('galleriesContainer');
     const search = document.getElementById('gallerySearchInput').value.toLowerCase();
@@ -390,7 +390,7 @@ window.deleteGallery = async function(id) {
     }
 };
 
-// Workspace
+// --- WORKSPACE ---
 window.openWorkspace = function(id) {
     const p = state.galleries.find(g => g.id === id);
     if(!p) return;
@@ -511,7 +511,7 @@ document.getElementById('wsPreviewBtn').onclick = () => {
     window.open(`https://clients.dominikphotofficial.lt/#/gallery/${state.activeProject.token || state.activeProject.pin}`, '_blank');
 };
 
-// Telegram
+// --- TELEGRAM ---
 document.getElementById('setting-tg-token').value = state.tgToken;
 document.getElementById('setting-tg-chat-id').value = state.tgChatId;
 
@@ -526,7 +526,7 @@ document.getElementById('btn-save-settings').addEventListener('click', () => {
 document.getElementById('btn-test-telegram').addEventListener('click', async () => {
     if (!state.tgToken || !state.tgChatId) { showToast("Nurodykite Token ir Chat ID", "error"); return; }
     try {
-        const res = await fetch(`https://api.telegram.org/bot${state.tgToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: state.tgChatId, text: "⚡️ *DP ADMIN:* Testinis pranešimas sėkmingai gautas!", parse_mode: 'Markdown' }) });
+        const res = await fetch(`https://api.telegram.org/bot${state.tgToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: state.tgChatId, text: "⚡️ *Dominikphotofficial.lt:* Testinis pranešimas sėkmingai gautas!", parse_mode: 'Markdown' }) });
         const data = await res.json();
         if (data.ok) showToast("Išsiųsta į Telegram!", "success"); else showToast(`TG Klaida: ${data.description}`, "error");
     } catch (e) { showToast("Tinklo klaida", "error"); }
