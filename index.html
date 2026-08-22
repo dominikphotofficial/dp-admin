@@ -1,9 +1,10 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DP| Valdymo Centras</title>
+    <title>Dominikphotofficial.lt | Valdymo Centras</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -115,6 +116,7 @@
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
                             <button class="cta-button" id="wsShareBtn"><i class="fa-solid fa-share-nodes"></i> Dalintis PIN</button>
                             <button class="cta-button btn-solid" id="wsPreviewBtn"><i class="fa-solid fa-eye"></i> Kliento peržiūra</button>
+                            <button class="cta-button btn-solid" id="wsSendAccessBtn" style="background: var(--accent-light); border-color: var(--accent-light);"><i class="fa-solid fa-envelope"></i> Siųsti prieigą</button>
                         </div>
                     </div>
 
@@ -156,12 +158,12 @@
                                 <div><label class="field-label" style="margin-top: 0;">Kategorija / Potėmė</label><input type="text" id="wsSetSubtitle" class="form-input"></div>
                             </div>
                             <div class="grid-2" style="margin-top: 15px;">
-                                <div><label class="field-label" style="margin-top: 0;">PIN kodas (6 skaitmenys)</label><input type="text" id="wsSetPin" class="form-input" maxlength="6"></div>
-                                <div><label class="field-label" style="margin-top: 0;">Fotosesijos data</label><input type="date" id="wsSetDate" class="form-input"></div>
+                                <div><label class="field-label" style="margin-top: 0;">Client ID (Login)</label><input type="text" id="wsSetClientId" class="form-input" readonly style="background: var(--bg-color);"></div>
+                                <div><label class="field-label" style="margin-top: 0;">PIN kodas (Password)</label><input type="text" id="wsSetPin" class="form-input" maxlength="6"></div>
                             </div>
                             <div class="grid-2" style="margin-top: 15px;">
                                 <div><label class="field-label" style="margin-top: 0;">Kliento el. paštas</label><input type="email" id="wsSetEmail" class="form-input"></div>
-                                <div><label class="field-label" style="margin-top: 0;">ZIP Archyvo nuoroda</label><input type="url" id="wsSetZip" class="form-input"></div>
+                                <div><label class="field-label" style="margin-top: 0;">Fotosesijos data</label><input type="date" id="wsSetDate" class="form-input"></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px; flex-wrap:wrap; gap:15px;">
                                 <button class="cta-button btn-solid" id="wsSaveSettingsBtn">Išsaugoti pakeitimus</button>
@@ -195,6 +197,67 @@
     </div>
 
     <!-- MODALS -->
+    <div class="modal-overlay" id="modal-lead">
+        <div class="modal-card" style="max-width: 850px;">
+            <div class="modal-header">
+                <h3 id="lead-modal-title">Užklausos Valdymas & TŽ</h3>
+                <button class="action-icon-btn" onclick="closeModal('modal-lead')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-2">
+                    <div><span class="field-label" style="margin-top: 0;">Kliento Vardas</span><div id="lead-modal-name" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-color);">-</div></div>
+                    <div><span class="field-label" style="margin-top: 0;">Kalbos Versija</span><div id="lead-modal-lang-badge">-</div></div>
+                </div>
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div><span class="field-label" style="margin-top: 0;">El. Paštas</span><div id="lead-modal-email" style="font-weight: 500;">-</div></div>
+                    <div><span class="field-label" style="margin-top: 0;">Telefonas / Instagram</span><div id="lead-modal-phone">-</div></div>
+                </div>
+                <span class="field-label">Pranešimas / Užklausos Idėja</span>
+                <div id="lead-modal-message" style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 14px; font-size: 0.9rem; margin-bottom: 20px;">-</div>
+
+                <!-- TŽ & References Section -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 10px;">
+                    <h4 style="font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px;">Techninė Užduotis (TŽ) ir Referencijos</h4>
+                    <div class="grid-2">
+                        <div>
+                            <label class="field-label" style="margin-top: 0;">Sutartos detalės (TŽ)</label>
+                            <textarea id="lead-modal-tz" class="form-textarea" style="height: 100px;" placeholder="Sutartos detalės, apranga, lokacijos..."></textarea>
+                        </div>
+                        <div>
+                            <label class="field-label" style="margin-top: 0;">Papildomos nuorodos</label>
+                            <textarea id="lead-modal-links" class="form-textarea" style="height: 100px;" placeholder="Pinterest, Moodboard nuorodos..."></textarea>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <label class="field-label">Įkelti referencijas (Nuotraukas)</label>
+                        <input type="file" id="lead-modal-refs-input" multiple accept="image/*" style="display:none;">
+                        <button class="cta-button" onclick="document.getElementById('lead-modal-refs-input').click()"><i class="fa-solid fa-upload"></i> Pasirinkti failus</button>
+                        <div class="ref-grid" id="lead-modal-refs-grid"></div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px;">
+                    <div class="grid-2">
+                        <div>
+                            <label class="field-label" style="margin-top: 0;">Keisti Būseną</label>
+                            <select id="lead-modal-status-select" class="form-select">
+                                <option value="new">Naujas (New)</option><option value="in_progress">Vykdoma (In Progress)</option><option value="answered">Atsakyta (Answered)</option><option value="archived">Archyvas (Archived)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="field-label" style="margin-top: 0;">Veiksmai</label>
+                            <button class="cta-button btn-solid" id="btn-create-portal-from-lead" style="width: 100%;"><i class="fa-solid fa-user-plus"></i> Sukurti Kliento Portalą</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cta-button" id="btn-lead-send-tg"><i class="fa-brands fa-telegram"></i> Į Telegram</button>
+                <button class="cta-button btn-solid" id="btn-lead-save-status">Išsaugoti TŽ ir Būseną</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="email-modal">
         <div class="modal-card">
             <div class="modal-header">
@@ -217,23 +280,30 @@
     <div class="modal-overlay" id="create-gallery-modal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3>Naujas Projektas (Galerija)</h3>
+                <h3>Naujas Projektas (Kliento Portalas)</h3>
                 <button class="action-icon-btn" onclick="closeModal('create-gallery-modal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
                 <div class="grid-2">
-                    <div><label class="field-label" style="margin-top: 0;">Pavadinimas *</label><input type="text" id="cgTitle" class="form-input" required></div>
-                    <div><label class="field-label" style="margin-top: 0;">Kategorija</label><input type="text" id="cgSubtitle" class="form-input" required></div>
+                    <div><label class="field-label" style="margin-top: 0;">Kliento Vardas / Pavadinimas *</label><input type="text" id="cgTitle" class="form-input" required></div>
+                    <div><label class="field-label" style="margin-top: 0;">Kliento El. Paštas</label><input type="email" id="cgEmail" class="form-input"></div>
                 </div>
                 <div class="grid-2" style="margin-top: 15px;">
-                    <div><label class="field-label" style="margin-top: 0;">PIN kodas (6 skaitmenys)</label><input type="text" id="cgPin" class="form-input" maxlength="6" required></div>
+                    <div><label class="field-label" style="margin-top: 0;">Client ID (Login)</label><input type="text" id="cgClientId" class="form-input" readonly style="background: var(--bg-color);"></div>
+                    <div><label class="field-label" style="margin-top: 0;">PIN kodas (Password)</label><input type="text" id="cgPin" class="form-input" maxlength="6" required></div>
+                </div>
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div><label class="field-label" style="margin-top: 0;">Kategorija</label><input type="text" id="cgSubtitle" class="form-input" required></div>
                     <div><label class="field-label" style="margin-top: 0;">Fotosesijos data</label><input type="date" id="cgDate" class="form-input"></div>
                 </div>
-                <label class="field-label" style="margin-top: 15px;">Nuotraukos</label>
+                
+                <label class="field-label" style="margin-top: 15px;">Nuotraukos (Prieš peržiūra)</label>
                 <div class="drop-box" id="cgDropBox">
                     <p id="cgDropLabel">Tempkite nuotraukas čia arba spustelėkite</p>
                     <input type="file" id="cgFileInput" multiple accept="image/*" style="display:none;">
                 </div>
+                <div class="ref-grid" id="cgPreviewGrid" style="margin-top: 10px;"></div>
+
                 <div class="progress-indicator" id="cgProgress">
                     <div class="progress-bar-rail"><div class="progress-bar-thumb" id="cgProgressThumb"></div></div>
                     <p class="progress-caption" id="cgProgressCaption">Įkeliama...</p>
@@ -241,7 +311,7 @@
             </div>
             <div class="modal-footer">
                 <button class="cta-button" onclick="closeModal('create-gallery-modal')">Atšaukti</button>
-                <button class="cta-button btn-solid" id="cgSubmitBtn">Sukurti projektą</button>
+                <button class="cta-button btn-solid" id="cgSubmitBtn">Sukurti portalą</button>
             </div>
         </div>
     </div>
