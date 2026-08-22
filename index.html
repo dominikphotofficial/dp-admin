@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DP - ADMIN | Dominik Photo Official</title>
+  <title>DP - ADMIN </title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -20,10 +20,10 @@
     <div class="auth-card">
       <h2>DP - ADMIN</h2>
       <div class="divider" style="margin: 10px auto 20px auto;"></div>
-      <p>Prisijunkite su įgaliotu el. paštu: <strong>dominikphotofficial.lt@gmail.com</strong></p>
+      <p>Prisijunkite naudodami administratoriaus paskyrą.</p>
       <div style="text-align: left;">
-        <label class="field-label">Administratoriaus El. Paštas</label>
-        <input type="email" id="login-email" class="form-input" value="dominikphotofficial.lt@gmail.com" required>
+        <label class="field-label">El. Paštas</label>
+        <input type="email" id="login-email" class="form-input" placeholder="admin@pavyzdys.lt" required>
         <label class="field-label">Slaptažodis</label>
         <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
         <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">Prisijungti prie skydo</button>
@@ -35,7 +35,7 @@
     <aside id="sidebar">
       <div class="brand-wrap">
         <div class="brand-title">DP - ADMIN</div>
-        <div class="brand-sub">Dominik Photo Official</div>
+        <div class="brand-sub">Dominikphotofficial.lt</div>
       </div>
       <ul class="sidebar-menu">
         <li class="menu-item active" data-view="dashboard"><button><i class="fa-solid fa-chart-pie"></i> Apžvalga <span class="badge-counter" id="badge-leads-count">0</span></button></li>
@@ -57,7 +57,7 @@
           <div class="header-title-box"><h2 id="page-header-title">Apžvalga ir Rodikliai</h2></div>
         </div>
         <div class="admin-profile">
-          <span class="user-email-tag" id="display-admin-email">dominikphotofficial.lt@gmail.com</span>
+          <span class="user-email-tag" id="display-admin-email"></span>
           <button class="btn-logout" id="btn-logout">Atsijungti</button>
         </div>
       </header>
@@ -153,7 +153,6 @@
     </div>
   </div>
 
-  <!-- Modals -->
   <div class="modal-overlay" id="modal-lead">
     <div class="modal-card" style="max-width: 800px;">
       <div class="modal-header">
