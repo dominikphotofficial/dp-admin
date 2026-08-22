@@ -491,7 +491,10 @@ document.getElementById('wsSaveSettingsBtn').onclick = async () => {
     const client_email = document.getElementById('wsSetEmail').value.trim();
     const zip_url = document.getElementById('wsSetZip').value.trim();
 
-    if (!title || pin.length !== 6) { showToast("Užpildykite pavadinimą ir 6 skaitmenų PIN", "error"); return; }
+    if (!title || !pin) { 
+    showToast("Užpildykite pavadinimą ir PIN kodą", "error"); 
+    return; 
+}
 
     await updateDoc(doc(dbClients, "galleries", state.activeProject.id), { title, subtitle, pin, date, client_email: client_email || null, zip_url: zip_url || null });
     state.activeProject.title = title; state.activeProject.subtitle = subtitle; state.activeProject.pin = pin;
