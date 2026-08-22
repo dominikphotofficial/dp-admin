@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — Dominik Photo Official</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <style>
+    :root {
+      --bg-base: #0a0a0c;
+      --bg-surface: #121216;
+      --bg-card: #17171d;
+      --bg-card-hover: #1f1f27;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-focus: rgba(212, 175, 55, 0.45);
+      
+      --accent-gold: #d4af37;
+      --accent-gold-light: #f3cf65;
+      --accent-gold-glow: rgba(212, 175, 55, 0.15);
+      --accent-blue: #38bdf8;
+      --accent-green: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+
+      --text-main: #f4f4f6;
+      --text-muted: #8b8b98;
+      --text-dim: #5a5a66;
+
+      --sidebar-width: 270px;
+      --header-height: 70px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262630;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #383848;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .brand-container {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-gold), #8f721d);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 15px var(--accent-gold-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+
+    .brand-text span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      padding: 20px 14px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .nav-item button i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .nav-item button:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-item.active button {
+      background: var(--accent-gold-glow);
+      color: var(--accent-gold-light);
+      border-color: rgba(212, 175, 55, 0.3);
+      font-weight: 600;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #252532;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .nav-item.active .nav-badge {
+      background: var(--accent-gold);
+      color: #000;
+    }
+
+    .sidebar-footer {
+      padding: 18px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .api-status-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4a4a58;
+    }
+
+    .status-dot.active {
+      background: var(--accent-green);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    #app-container {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+
+    header.top-bar {
+      height: var(--header-height);
+      background: rgba(18, 18, 22, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .page-title-wrap h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .action-btn-gold {
+      background: linear-gradient(135deg, var(--accent-gold), #b38c20);
+      color: #000;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .action-btn-gold:hover {
+      box-shadow: 0 4px 15px var(--accent-gold-glow);
+      transform: translateY(-1px);
+    }
+
+    main.content-area {
+      padding: 32px;
+      flex: 1;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-gold);
+      opacity: 0.5;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--accent-gold);
+    }
+
+    .stat-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-footer {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .panel-header {
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .panel-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .input-search {
+      background: #0f0f13;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px 8px 34px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .input-search:focus {
+      border-color: var(--border-focus);
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-wrapper i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .filter-select {
+      background: #0f0f13;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    table.data-table th {
+      background: #121217;
+      padding: 14px 20px;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-subtle);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+    }
+
+    table.data-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    table.data-table tbody tr {
+      transition: background 0.15s ease;
+    }
+
+    table.data-table tbody tr:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-lang-lt { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-lang-ru { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-lang-en { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    .badge-status-new { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-status-progress { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-status-answered { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-status-archived { background: rgba(107, 114, 128, 0.15); color: #9ca3af; border: 1px solid rgba(107, 114, 128, 0.3); }
+
+    .badge-paid { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-locked { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-ready { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: #23232c;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+      color: var(--text-main);
+      background: #2e2e3a;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-icon.danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .gallery-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .gallery-cover {
+      height: 170px;
+      background: #111116;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+    }
+
+    .gallery-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(23, 23, 29, 0.95) 0%, transparent 60%);
+    }
+
+    .gallery-cover-badges {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .gallery-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .gallery-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .gallery-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .gallery-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gallery-token-tag {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0f0f13;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px dashed var(--border-subtle);
+      font-size: 0.75rem;
+      color: var(--accent-gold-light);
+    }
+
+    .gallery-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: #111116;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      background: #252530;
+      color: var(--text-main);
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: #31313e;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-gold), #ad861e);
+      color: #000;
+      padding: 9px 20px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 15px var(--accent-gold-glow);
+    }
+
+    .btn-primary:disabled, .btn-secondary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      background: #0d0d10;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--border-focus);
+      background: #111116;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .upload-box {
+      border: 2px dashed rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .upload-box:hover {
+      border-color: var(--accent-gold);
+      background: rgba(212, 175, 55, 0.03);
+    }
+
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #23232c;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      min-width: 300px;
+      max-width: 420px;
+      animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .toast.toast-success { border-left: 4px solid var(--accent-green); }
+    .toast.toast-error { border-left: 4px solid var(--accent-red); }
+    .toast.toast-info { border-left: 4px solid var(--accent-blue); }
+
+    .toast-icon {
+      font-size: 1.1rem;
+    }
+    .toast-success .toast-icon { color: var(--accent-green); }
+    .toast-error .toast-icon { color: var(--accent-red); }
+    .toast-info .toast-icon { color: var(--accent-blue); }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .toast-message {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-dim);
+    }
+
+    .empty-state i {
+      font-size: 2.8rem;
+      color: #2b2b36;
+    }
+
+    .empty-state h4 {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .empty-state p {
+      font-size: 0.82rem;
+      max-width: 320px;
+    }
+
+    .template-box {
+      background: #0d0d10;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: #d1d1db;
+      white-space: pre-wrap;
+      max-height: 220px;
+      overflow-y: auto;
+      user-select: all;
+    }
+
+    @media (max-width: 992px) {
+      #sidebar {
+        transform: translateX(-100%);
+      }
+      #sidebar.open {
+        transform: translateX(0);
+      }
+      #app-container {
+        margin-left: 0;
+      }
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header.top-bar {
+        padding: 0 16px;
+      }
+      main.content-area {
+        padding: 16px;
+      }
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <aside id="sidebar">
+    <div class="brand-container">
+      <div class="brand-logo">D</div>
+      <div class="brand-text">
+        <h1>Dominik Photo</h1>
+        <span>Admin Panel LT</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active" data-view="dashboard">
+        <button><i class="fa-solid fa-chart-pie"></i> Apžvalga <span class="nav-badge" id="badge-total-leads">0</span></button>
+      </li>
+      <li class="nav-item" data-view="leads">
+        <button><i class="fa-solid fa-envelope-open-text"></i> Užklausos & TFP <span class="nav-badge" id="badge-new-leads">0</span></button>
+      </li>
+      <li class="nav-item" data-view="galleries">
+        <button><i class="fa-solid fa-images"></i> Klientų Galerijos <span class="nav-badge" id="badge-total-galleries">0</span></button>
+      </li>
+      <li class="nav-item" data-view="portfolio">
+        <button><i class="fa-solid fa-camera-retro"></i> Portfelio TVS</button>
+      </li>
+      <li class="nav-item" data-view="settings">
+        <button><i class="fa-solid fa-sliders"></i> Nustatymai & Bot</button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="api-status-card">
+        <div class="status-row">
+          <span class="status-indicator"><span class="status-dot" id="status-dot-main"></span> API 1: Portfolio & Leads</span>
+          <span style="color: var(--text-dim); font-size: 0.7rem;">tfp-form</span>
+        </div>
+        <div class="status-row">
+          <span class="status-indicator"><span class="status-dot" id="status-dot-clients"></span> API 2: Clients Portal</span>
+          <span style="color: var(--text-dim); font-size: 0.7rem;">clients-dp</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div id="app-container">
+    <header class="top-bar">
+      <div class="header-left">
+        <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title-wrap">
+          <h2 id="topbar-title">Valdymo skydas</h2>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn-gold" id="btn-quick-new-gallery">
+          <i class="fa-solid fa-plus"></i> Nauja fotosesija
+        </button>
+      </div>
+    </header>
+
+    <main class="content-area">
+
+      <section id="view-dashboard" class="view-section active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Naujos užklausos</span>
+              <div class="stat-icon"><i class="fa-solid fa-inbox"></i></div>
+            </div>
+            <div class="stat-value" id="stat-new-leads">0</div>
+            <div class="stat-footer">Laukia peržiūros ar TFP patvirtinimo</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Klientų fotosesijos</span>
+              <div class="stat-icon"><i class="fa-solid fa-photo-film"></i></div>
+            </div>
+            <div class="stat-value" id="stat-active-galleries">0</div>
+            <div class="stat-footer">Aktyvios privačios galerijos (API 2)</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Portfolio projektai</span>
+              <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+            </div>
+            <div class="stat-value" id="stat-portfolio-count">0</div>
+            <div class="stat-footer">Publikuota svetainėje (API 1)</div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Paskutinės gautos užklausos</div>
+            <button class="btn-secondary" onclick="switchView('leads')">Visos užklausos <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kalba</th>
+                  <th>Klientas / Kontaktai</th>
+                  <th>Tipas</th>
+                  <th>Data</th>
+                  <th>Būsena</th>
+                  <th>Veiksmai</th>
+                </tr>
+              </thead>
+              <tbody id="table-recent-leads-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-leads" class="view-section">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Užklausų valdymas (TFP, Fotosesijos, Kontaktai)</div>
+            <div class="panel-controls">
+              <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="leads-search-input" class="input-search" placeholder="Ieškoti pagal vardą ar el. paštą...">
+              </div>
+              <select id="leads-filter-lang" class="filter-select">
+                <option value="all">Visos kalbos</option>
+                <option value="LT">Lietuvių (LT)</option>
+                <option value="RU">Русский (RU)</option>
+                <option value="EN">English (EN)</option>
+              </select>
+              <select id="leads-filter-status" class="filter-select">
+                <option value="all">Visos būsenos</option>
+                <option value="new">Naujas</option>
+                <option value="in_progress">Vykdoma</option>
+                <option value="answered">Atsakyta</option>
+                <option value="archived">Archyvas</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kalba</th>
+                  <th>Klientas</th>
+                  <th>Kontaktai</th>
+                  <th>Tipas / Kategorija</th>
+                  <th>Pateikimo data</th>
+                  <th>Būsena</th>
+                  <th>Veiksmai</th>
+                </tr>
+              </thead>
+              <tbody id="table-all-leads-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-galleries" class="view-section">
+        <div class="panel-card" style="background: transparent; border: none; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div class="search-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="gallery-search-input" class="input-search" placeholder="Ieškoti kliento ar žetono...">
+            </div>
+            <button class="action-btn-gold" id="btn-create-gallery-modal">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Įkelti naują sesiją
+            </button>
+          </div>
+        </div>
+        <div class="card-grid" id="galleries-grid"></div>
+      </section>
+
+      <section id="view-portfolio" class="view-section">
+        <div class="panel-card" style="background: transparent; border: none; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div class="search-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="portfolio-search-input" class="input-search" placeholder="Ieškoti projektų...">
+            </div>
+            <button class="action-btn-gold" id="btn-create-portfolio-modal">
+              <i class="fa-solid fa-plus"></i> Pridėti portfolio projektą
+            </button>
+          </div>
+        </div>
+        <div class="card-grid" id="portfolio-grid"></div>
+      </section>
+
+      <section id="view-settings" class="view-section">
+        <div class="panel-card" style="max-width: 700px;">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-brands fa-telegram" style="color: var(--accent-blue); margin-right: 8px;"></i> Telegram Bot Integracija</div>
+          </div>
+          <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label">Telegram Bot Token</label>
+              <input type="password" id="setting-tg-token" class="form-input" placeholder="7123456789:AAHk...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telegram Chat ID / Channel ID</label>
+              <input type="text" id="setting-tg-chat-id" class="form-input" placeholder="-1001234567890 arba 12345678">
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 8px;">
+              <button class="btn-primary" id="btn-save-settings">Išsaugoti parametrus</button>
+              <button class="btn-secondary" id="btn-test-telegram"><i class="fa-solid fa-paper-plane"></i> Siųsti testinį pranešimą</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-lead">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="lead-modal-title">Užklausos duomenys</h3>
+        <button class="modal-close" onclick="closeModal('modal-lead')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid-2">
+          <div>
+            <span class="form-label">Kliento vardas</span>
+            <div id="lead-modal-name" style="font-weight: 700; font-size: 1.05rem; margin-top: 4px;">-</div>
+          </div>
+          <div>
+            <span class="form-label">Kalbos versija</span>
+            <div id="lead-modal-lang-badge" style="margin-top: 4px;">-</div>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <span class="form-label">El. paštas</span>
+            <div id="lead-modal-email" style="font-size: 0.9rem; margin-top: 4px; color: var(--accent-gold-light);">-</div>
+          </div>
+          <div>
+            <span class="form-label">Telefonas / Instagram</span>
+            <div id="lead-modal-phone" style="font-size: 0.9rem; margin-top: 4px;">-</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Kliento pranešimas</span>
+          <div id="lead-modal-message" style="background: #0d0d10; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.88rem; line-height: 1.5; color: #ccc;">
+            -
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Keisti būseną</label>
+          <select id="lead-modal-status-select" class="form-select">
+            <option value="new">Naujas (New)</option>
+            <option value="in_progress">Vykdoma (In Progress)</option>
+            <option value="answered">Atsakyta (Answered)</option>
+            <option value="archived">Archyvas (Archived)</option>
+          </select>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border-subtle);">
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-gold);"></i> El. laiško atsakymo šablonas</label>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="generateLeadResponse('LT')">LT</button>
+              <button class="btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="generateLeadResponse('RU')">RU</button>
+              <button class="btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="generateLeadResponse('EN')">EN</button>
+            </div>
+          </div>
+          <div class="template-box" id="lead-modal-template-preview">Pasirinkite kalbą šablono generavimui...</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-lead-tg-send"><i class="fa-brands fa-telegram"></i> Siųsti į TG</button>
+        <button class="btn-secondary" id="btn-copy-template"><i class="fa-solid fa-copy"></i> Kopijuoti atsakymą</button>
+        <button class="btn-primary" id="btn-save-lead-status">Išsaugoti pakeitimus</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-gallery">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="gallery-modal-title">Nauja kliento galerija (API 2)</h3>
+        <button class="modal-close" onclick="closeModal('modal-gallery')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Kliento vardas / Projektas *</label>
+            <input type="text" id="gal-input-client" class="form-input" placeholder="Justina & Tomas">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fotosesijos tipas</label>
+            <select id="gal-input-type" class="form-select">
+              <option value="Wedding">Vestuvės (Wedding)</option>
+              <option value="Portrait">Asmeninis portretas</option>
+              <option value="LoveStory">Love Story</option>
+              <option value="Commercial">Komercinė / Brand</option>
+              <option value="TFP">TFP Projektas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Fotosesijos data</label>
+            <input type="date" id="gal-input-date" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prieigos būsena</label>
+            <select id="gal-input-status" class="form-select">
+              <option value="ready">Paruošta atsisiuntimui (Ready)</option>
+              <option value="paid">Apmokėta (Paid)</option>
+              <option value="locked">Užrakinta / Laukiama apmokėjimo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">PIN / Slaptažodis</label>
+            <input type="text" id="gal-input-pin" class="form-input" placeholder="pvz., 7788">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unikalus prieigos žetonas (Token)</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="gal-input-token" class="form-input" style="font-family: monospace;" readonly>
+              <button class="btn-secondary" onclick="generateNewGalleryToken()"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Failų įkėlimas į Firebase Storage (Client App)</label>
+          <div class="upload-box" id="gallery-dropzone">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--accent-gold); margin-bottom: 8px;"></i>
+            <div style="font-weight: 600; font-size: 0.9rem;">Pasirinkite viršelio arba sesijos nuotraukas</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">JPG, PNG, WebP iki 50MB</div>
+            <input type="file" id="gal-file-input" accept="image/*">
+          </div>
+          <div class="progress-bar-container" id="gal-progress-bar-wrap">
+            <div class="progress-bar-fill" id="gal-progress-bar-fill"></div>
+          </div>
+          <div id="gal-upload-status" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: none;">Įkeliama...</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-gallery')">Atšaukti</button>
+        <button class="btn-primary" id="btn-save-gallery">Sukurti ir išsaugoti</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-portfolio">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Pridėti projektą į Portfolio (API 1)</h3>
+        <button class="modal-close" onclick="closeModal('modal-portfolio')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Projekto pavadinimas *</label>
+            <input type="text" id="port-input-title" class="form-input" placeholder="Vilnius Nocturne Editorial">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategorija</label>
+            <select id="port-input-category" class="form-select">
+              <option value="Portrait">Portrait</option>
+              <option value="Fashion">Fashion & Editorial</option>
+              <option value="Street">Street & Architecture</option>
+              <option value="Wedding">Wedding / Ceremony</option>
+              <option value="TFP">TFP Special</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">SEO Aprašymas / Tekstas</label>
+          <textarea id="port-input-desc" class="form-textarea" rows="3" placeholder="Trumpas serijos aprašymas, apšvietimas ir lokacija..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Viršelio nuotrauka</label>
+          <div class="upload-box">
+            <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-gold); margin-bottom: 8px;"></i>
+            <div style="font-weight: 600; font-size: 0.85rem;">Įkelti pagrindinę nuotrauką</div>
+            <input type="file" id="port-file-input" accept="image/*">
+          </div>
+          <div class="progress-bar-container" id="port-progress-bar-wrap">
+            <div class="progress-bar-fill" id="port-progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-portfolio')">Atšaukti</button>
+        <button class="btn-primary" id="btn-save-portfolio">Publikuoti projektą</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const firebaseConfigMain = {
+      apiKey: "AIzaSyBxhDy4I4HZnqOAvwWE3JyjYsuy_Tg86xE",
+      authDomain: "tfp-form.firebaseapp.com",
+      projectId: "tfp-form",
+      storageBucket: "tfp-form.firebasestorage.app",
+      messagingSenderId: "542082314917",
+      appId: "1:542082314917:web:5d3a750950a8ac4fd0d34c",
+      measurementId: "G-4VRZRBDHY2"
+    };
+
+    const firebaseConfigClients = {
+      apiKey: "AIzaSyDqU4pdpFSCFoirSJUKG08kyJboyKgeEH4",
+      authDomain: "clients-dp-portfolio.firebaseapp.com",
+      projectId: "clients-dp-portfolio",
+      storageBucket: "clients-dp-portfolio.firebasestorage.app",
+      messagingSenderId: "850481600153",
+      appId: "1:850481600153:web:ad62867d54636ae8434a08",
+      measurementId: "G-0LRSRPYYRF"
+    };
+
+    let appMain, appClients;
+    let dbMain, dbClients;
+    let storageMain, storageClients;
+
+    try {
+      appMain = firebase.initializeApp(firebaseConfigMain, "mainApp");
+      dbMain = appMain.firestore();
+      storageMain = appMain.storage();
+      document.getElementById('status-dot-main').classList.add('active');
+    } catch (e) {
+      console.error("Firebase Main App Init Error:", e);
+    }
+
+    try {
+      appClients = firebase.initializeApp(firebaseConfigClients, "clientApp");
+      dbClients = appClients.firestore();
+      storageClients = appClients.storage();
+      document.getElementById('status-dot-clients').classList.add('active');
+    } catch (e) {
+      console.error("Firebase Client App Init Error:", e);
+    }
+
+    const state = {
+      currentView: 'dashboard',
+      leads: [],
+      galleries: [],
+      portfolio: [],
+      selectedLead: null,
+      telegramToken: localStorage.getItem('dp_tg_token') || '',
+      telegramChatId: localStorage.getItem('dp_tg_chat_id') || ''
+    };
+
+    function showToast(message, type = 'info', title = '') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      let icon = 'fa-info-circle';
+      let defaultTitle = 'Pranešimas';
+      if (type === 'success') { icon = 'fa-circle-check'; defaultTitle = 'Sėkmingai'; }
+      if (type === 'error') { icon = 'fa-triangle-exclamation'; defaultTitle = 'Klaida'; }
+
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} toast-icon"></i>
+        <div class="toast-content">
+          <div class="toast-title">${title || defaultTitle}</div>
+          <div class="toast-message">${escapeHtml(message)}</div>
+        </div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease reverse forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function switchView(viewName) {
+      state.currentView = viewName;
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-view') === viewName);
+      });
+      document.querySelectorAll('.view-section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === `view-${viewName}`);
+      });
+
+      const titles = {
+        dashboard: 'Valdymo skydas',
+        leads: 'Gautos užklausos ir TFP paraiškos',
+        galleries: 'Klientų fotosesijos & Prieigos',
+        portfolio: 'Portfolio TVS & Svetainė',
+        settings: 'Sistemos nustatymai ir Telegram'
+      };
+      document.getElementById('topbar-title').innerText = titles[viewName] || 'Admin';
+      document.getElementById('sidebar').classList.remove('open');
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        switchView(item.getAttribute('data-view'));
+      });
+    });
+
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+
+    function initLeadsListener() {
+      if (!dbMain) return;
+      
+      const coll = dbMain.collection('requests');
+      coll.orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+        state.leads = [];
+        snapshot.forEach(doc => {
+          state.leads.push({ id: doc.id, ...doc.data() });
+        });
+        renderLeads();
+        updateDashboardCounters();
+      }, (err) => {
+        dbMain.collection('tfp_requests').onSnapshot((snap) => {
+          state.leads = [];
+          snap.forEach(doc => state.leads.push({ id: doc.id, ...doc.data() }));
+          renderLeads();
+          updateDashboardCounters();
+        }, (error) => {
+          showToast("Nepavyko pasiekti užklausų kolekcijos (API 1)", "error");
+        });
+      });
+    }
+
+    function initGalleriesListener() {
+      if (!dbClients) return;
+      dbClients.collection('galleries').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+        state.galleries = [];
+        snapshot.forEach(doc => {
+          state.galleries.push({ id: doc.id, ...doc.data() });
+        });
+        renderGalleries();
+        updateDashboardCounters();
+      }, (err) => {
+        showToast("Klaida įkeliant klientų galerijas (API 2)", "error");
+      });
+    }
+
+    function initPortfolioListener() {
+      if (!dbMain) return;
+      dbMain.collection('portfolio').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+        state.portfolio = [];
+        snapshot.forEach(doc => {
+          state.portfolio.push({ id: doc.id, ...doc.data() });
+        });
+        renderPortfolio();
+        updateDashboardCounters();
+      }, (err) => {
+        console.error("Portfolio listener error:", err);
+      });
+    }
+
+    function updateDashboardCounters() {
+      const newLeadsCount = state.leads.filter(l => !l.status || l.status === 'new').length;
+      document.getElementById('badge-total-leads').innerText = state.leads.length;
+      document.getElementById('badge-new-leads').innerText = newLeadsCount;
+      document.getElementById('stat-new-leads').innerText = newLeadsCount;
+
+      document.getElementById('badge-total-galleries').innerText = state.galleries.length;
+      document.getElementById('stat-active-galleries').innerText = state.galleries.length;
+
+      document.getElementById('stat-portfolio-count').innerText = state.portfolio.length;
+
+      const recentTbody = document.getElementById('table-recent-leads-body');
+      if (!state.leads.length) {
+        recentTbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-inbox"></i><h4>Užklausų dar nėra</h4><p>Naujos paraiškos iš svetainės bus atvaizduojamos čia realiu laiku</p></div></td></tr>`;
+        return;
+      }
+
+      recentTbody.innerHTML = state.leads.slice(0, 5).map(lead => `
+        <tr>
+          <td>${getLangBadge(lead.language || lead.lang || 'LT')}</td>
+          <td><strong>${escapeHtml(lead.name || 'Be vardo')}</strong><br><small style="color:var(--text-muted)">${escapeHtml(lead.email || lead.instagram || '-')}</small></td>
+          <td>${escapeHtml(lead.type || lead.shootType || 'TFP / Fotosesija')}</td>
+          <td>${formatDate(lead.createdAt)}</td>
+          <td>${getStatusBadge(lead.status || 'new')}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn-icon" title="Peržiūra ir atsakymas" onclick="openLeadModal('${lead.id}')"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderLeads() {
+      const tbody = document.getElementById('table-all-leads-body');
+      const search = (document.getElementById('leads-search-input').value || '').toLowerCase();
+      const filterLang = document.getElementById('leads-filter-lang').value;
+      const filterStatus = document.getElementById('leads-filter-status').value;
+
+      let filtered = state.leads.filter(lead => {
+        const name = (lead.name || '').toLowerCase();
+        const email = (lead.email || '').toLowerCase();
+        const lang = (lead.language || lead.lang || 'LT').toUpperCase();
+        const status = lead.status || 'new';
+
+        const matchSearch = name.includes(search) || email.includes(search);
+        const matchLang = filterLang === 'all' || lang === filterLang;
+        const matchStatus = filterStatus === 'all' || status === filterStatus;
+        return matchSearch && matchLang && matchStatus;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-filter-circle-xmark"></i><h4>Užklausų nerasta</h4><p>Pakeiskite paieškos kriterijus arba filtrą</p></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(lead => `
+        <tr>
+          <td>${getLangBadge(lead.language || lead.lang || 'LT')}</td>
+          <td><strong>${escapeHtml(lead.name || 'Svečias')}</strong></td>
+          <td>
+            <div>${escapeHtml(lead.email || '-')}</div>
+            <small style="color:var(--text-muted);">${escapeHtml(lead.phone || lead.instagram || '')}</small>
+          </td>
+          <td>${escapeHtml(lead.type || lead.shootType || 'TFP / Užklausa')}</td>
+          <td>${formatDate(lead.createdAt)}</td>
+          <td>${getStatusBadge(lead.status || 'new')}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn-icon" title="Atidaryti" onclick="openLeadModal('${lead.id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn-icon danger" title="Ištrinti" onclick="deleteLead('${lead.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderGalleries() {
+      const grid = document.getElementById('galleries-grid');
+      const search = (document.getElementById('gallery-search-input').value || '').toLowerCase();
+
+      const filtered = state.galleries.filter(g => {
+        const client = (g.clientName || '').toLowerCase();
+        const token = (g.token || '').toLowerCase();
+        return client.includes(search) || token.includes(search);
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><i class="fa-solid fa-images"></i><h4>Klientų galerijų nėra</h4><p>Paspauskite „Įkelti naują sesiją“, kad sukurtumėte prieigą</p></div></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(g => `
+        <div class="gallery-card">
+          <div class="gallery-cover" style="background-image: url('${g.coverUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'}');">
+            <div class="gallery-cover-badges">
+              <span class="badge ${g.status === 'paid' ? 'badge-paid' : (g.status === 'locked' ? 'badge-locked' : 'badge-ready')}">
+                ${g.status === 'paid' ? 'Apmokėta' : (g.status === 'locked' ? 'Užrakinta' : 'Paruošta')}
+              </span>
+              <span class="gallery-token-tag">${escapeHtml(g.token)}</span>
+            </div>
+          </div>
+          <div class="gallery-body">
+            <div class="gallery-title">${escapeHtml(g.clientName)}</div>
+            <div class="gallery-meta">
+              <div class="gallery-meta-row"><i class="fa-solid fa-camera"></i> <span>${escapeHtml(g.type || 'Fotosesija')}</span></div>
+              <div class="gallery-meta-row"><i class="fa-solid fa-calendar-day"></i> <span>${g.shootDate || 'Data nenurodyta'}</span></div>
+              <div class="gallery-meta-row"><i class="fa-solid fa-key"></i> <span>PIN: ${escapeHtml(g.pin || 'Be PIN')}</span></div>
+            </div>
+          </div>
+          <div class="gallery-footer">
+            <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.75rem;" onclick="copyGalleryLink('${g.token}')">
+              <i class="fa-solid fa-link"></i> Nuoroda
+            </button>
+            <button class="btn-icon danger" onclick="deleteGallery('${g.id}')" title="Ištrinti"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPortfolio() {
+      const grid = document.getElementById('portfolio-grid');
+      const search = (document.getElementById('portfolio-search-input').value || '').toLowerCase();
+
+      const filtered = state.portfolio.filter(p => {
+        const title = (p.title || '').toLowerCase();
+        const cat = (p.category || '').toLowerCase();
+        return title.includes(search) || cat.includes(search);
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div style="grid-column: 1/-1;"><div class="empty-state"><i class="fa-solid fa-camera-retro"></i><h4>Portfolio tuščias</h4><p>Pridėkite darbus atvaizdavimui svetainėje dominikphotofficial.lt</p></div></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="gallery-card">
+          <div class="gallery-cover" style="background-image: url('${p.coverUrl || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80'}');">
+            <div class="gallery-cover-badges">
+              <span class="badge badge-ready">${escapeHtml(p.category || 'Editorial')}</span>
+            </div>
+          </div>
+          <div class="gallery-body">
+            <div class="gallery-title">${escapeHtml(p.title)}</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">${escapeHtml(p.description || 'Be aprašymo')}</p>
+          </div>
+          <div class="gallery-footer">
+            <span style="font-size: 0.75rem; color: var(--text-dim);">${formatDate(p.createdAt)}</span>
+            <button class="btn-icon danger" onclick="deletePortfolioItem('${p.id}')" title="Ištrinti"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getLangBadge(lang) {
+      const l = (lang || 'LT').toUpperCase();
+      if (l === 'LT') return `<span class="badge badge-lang-lt">LT</span>`;
+      if (l === 'RU') return `<span class="badge badge-lang-ru">RU</span>`;
+      return `<span class="badge badge-lang-en">EN</span>`;
+    }
+
+    function getStatusBadge(status) {
+      switch (status) {
+        case 'new': return `<span class="badge badge-status-new">Naujas</span>`;
+        case 'in_progress': return `<span class="badge badge-status-progress">Vykdoma</span>`;
+        case 'answered': return `<span class="badge badge-status-answered">Atsakyta</span>`;
+        case 'archived': return `<span class="badge badge-status-archived">Archyvas</span>`;
+        default: return `<span class="badge badge-status-new">${escapeHtml(status)}</span>`;
+      }
+    }
+
+    function formatDate(ts) {
+      if (!ts) return '-';
+      try {
+        const date = ts.toDate ? ts.toDate() : new Date(ts);
+        return date.toLocaleDateString('lt-LT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        return '-';
+      }
+    }
+
+    const templates = {
+      LT: {
+        greeting: (name) => `Sveiki, ${name}!`,
+        body: (type) => `Dėkoju už Jūsų kreipimąsi dėl fotosesijos (${type}).\n\nSu malonumu susipažinau su Jūsų idėja ir noriu pasiūlyti suderinti tikslią datą bei lokaciją Vilniuje.\nPrisegu nuorodą į mano naujausius darbus: https://dominikphotofficial.lt\n\nLauksiu Jūsų atsakymo!`,
+        sign: `Pagarbiai,\nDominik Photo Official\nVilnius, Lietuva`
+      },
+      RU: {
+        greeting: (name) => `Здравствуйте, ${name}!`,
+        body: (type) => `Благодарю вас за заявку на съемку (${type}).\n\nЯ внимательно ознакомился с вашей идеей и с радостью готов обсудить детали, тайминг и подходящую локацию в Вильнюсе.\nОзнакомиться с сессиями можно на моем сайте: https://dominikphotofficial.lt\n\nБуду рад сотрудничеству!`,
+        sign: `С уважением,\nДоминик (Dominik Photo Official)\nВильнюс, Литва`
+      },
+      EN: {
+        greeting: (name) => `Hello ${name}!`,
+        body: (type) => `Thank you for reaching out regarding a photoshoot session (${type}).\n\nI have reviewed your request and would be thrilled to collaborate with you. Let's align on preferred dates, styling, and locations in Vilnius.\nYou can explore more of my work at: https://dominikphotofficial.lt\n\nLooking forward to your reply!`,
+        sign: `Best regards,\nDominik Photo Official\nVilnius, Lithuania`
+      }
+    };
+
+    function generateLeadResponse(lang) {
+      if (!state.selectedLead) return;
+      const lead = state.selectedLead;
+      const name = lead.name || 'Klientas';
+      const type = lead.type || lead.shootType || 'Fotosesija';
+      
+      const t = templates[lang] || templates.LT;
+      const text = `${t.greeting(name)}\n\n${t.body(type)}\n\n${t.sign}`;
+      document.getElementById('lead-modal-template-preview').innerText = text;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function openLeadModal(id) {
+      const lead = state.leads.find(l => l.id === id);
+      if (!lead) return;
+      state.selectedLead = lead;
+
+      document.getElementById('lead-modal-title').innerText = `Užklausa #${lead.id.substring(0, 6)}`;
+      document.getElementById('lead-modal-name').innerText = lead.name || 'Be vardo';
+      document.getElementById('lead-modal-lang-badge').innerHTML = getLangBadge(lead.language || lead.lang || 'LT');
+      document.getElementById('lead-modal-email').innerText = lead.email || '-';
+      document.getElementById('lead-modal-phone').innerText = lead.phone || lead.instagram || '-';
+      document.getElementById('lead-modal-message').innerText = lead.message || lead.notes || 'Pranešimo tekstas tuščias';
+      document.getElementById('lead-modal-status-select').value = lead.status || 'new';
+
+      const lang = (lead.language || lead.lang || 'LT').toUpperCase();
+      generateLeadResponse(lang);
+      openModal('modal-lead');
+    }
+
+    document.getElementById('btn-save-lead-status').addEventListener('click', async () => {
+      if (!state.selectedLead || !dbMain) return;
+      const newStatus = document.getElementById('lead-modal-status-select').value;
+      try {
+        await dbMain.collection('requests').doc(state.selectedLead.id).update({
+          status: newStatus,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast("Būsena atnaujinta", "success");
+        closeModal('modal-lead');
+      } catch (e) {
+        try {
+          await dbMain.collection('tfp_requests').doc(state.selectedLead.id).update({
+            status: newStatus,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          showToast("Būsena atnaujinta", "success");
+          closeModal('modal-lead');
+        } catch (err) {
+          showToast("Klaida išsaugant būseną", "error");
+        }
+      }
+    });
+
+    document.getElementById('btn-copy-template').addEventListener('click', () => {
+      const text = document.getElementById('lead-modal-template-preview').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Atsakymo šablonas nukopijuotas", "success");
+      });
+    });
+
+    document.getElementById('btn-lead-tg-send').addEventListener('click', async () => {
+      if (!state.selectedLead) return;
+      const l = state.selectedLead;
+      const msg = `📷 *Dominik Photo Lead*\n\n👤 *Vardas:* ${l.name || '-'}\n🌐 *Kalba:* [${l.language || 'LT'}]\n✉️ *El. paštas:* ${l.email || '-'}\n📱 *Kontaktai:* ${l.phone || l.instagram || '-'}\n🎯 *Tipas:* ${l.type || 'Fotosesija'}\n📝 *Pranešimas:* ${l.message || '-'}`;
+      await sendTelegramMessage(msg);
+    });
+
+    async function deleteLead(id) {
+      if (!confirm("Ar tikrai norite ištrinti šią užklausą?")) return;
+      try {
+        await dbMain.collection('requests').doc(id).delete();
+        showToast("Užklausa ištrinta", "info");
+      } catch (e) {
+        try {
+          await dbMain.collection('tfp_requests').doc(id).delete();
+          showToast("Užklausa ištrinta", "info");
+        } catch (err) {
+          showToast("Klaida trinant užklausą", "error");
+        }
+      }
+    }
+
+    function generateNewGalleryToken() {
+      const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+      const token = `DP-${new Date().getFullYear()}-${rand}`;
+      document.getElementById('gal-input-token').value = token;
+    }
+
+    document.getElementById('btn-quick-new-gallery').addEventListener('click', () => {
+      generateNewGalleryToken();
+      openModal('modal-gallery');
+    });
+
+    document.getElementById('btn-create-gallery-modal').addEventListener('click', () => {
+      generateNewGalleryToken();
+      openModal('modal-gallery');
+    });
+
+    document.getElementById('btn-save-gallery').addEventListener('click', async () => {
+      const clientName = document.getElementById('gal-input-client').value.trim();
+      const shootType = document.getElementById('gal-input-type').value;
+      const shootDate = document.getElementById('gal-input-date').value;
+      const status = document.getElementById('gal-input-status').value;
+      const pin = document.getElementById('gal-input-pin').value.trim();
+      const token = document.getElementById('gal-input-token').value.trim();
+      const fileInput = document.getElementById('gal-file-input');
+
+      if (!clientName || !token) {
+        showToast("Užpildykite kliento vardą ir žetoną", "error");
+        return;
+      }
+
+      if (!dbClients) {
+        showToast("API 2 Clients neinicijuotas", "error");
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-gallery');
+      saveBtn.disabled = true;
+
+      try {
+        let coverUrl = '';
+
+        if (fileInput.files.length > 0 && storageClients) {
+          const file = fileInput.files[0];
+          const storageRef = storageClients.ref(`galleries/${token}/cover_${Date.now()}_${file.name}`);
+          const uploadTask = storageRef.put(file);
+
+          const pWrap = document.getElementById('gal-progress-bar-wrap');
+          const pFill = document.getElementById('gal-progress-bar-fill');
+          const pStatus = document.getElementById('gal-upload-status');
+          pWrap.style.display = 'block';
+          pStatus.style.display = 'block';
+
+          await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed', 
+              (snap) => {
+                const progress = (snap.bytesTransferred / snap.totalBytes) * 100;
+                pFill.style.width = `${progress}%`;
+                pStatus.innerText = `Įkeliama į Storage: ${Math.round(progress)}%`;
+              }, 
+              (err) => reject(err), 
+              async () => {
+                coverUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                resolve();
+              }
+            );
+          });
+        }
+
+        await dbClients.collection('galleries').add({
+          clientName,
+          type: shootType,
+          shootDate,
+          status,
+          pin,
+          token,
+          coverUrl: coverUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showToast(`Galerija klientui ${clientName} sukurta!`, "success");
+        closeModal('modal-gallery');
+        document.getElementById('gal-input-client').value = '';
+        document.getElementById('gal-file-input').value = '';
+      } catch (err) {
+        showToast("Klaida išsaugant galeriją: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+        document.getElementById('gal-progress-bar-wrap').style.display = 'none';
+        document.getElementById('gal-upload-status').style.display = 'none';
+      }
+    });
+
+    function copyGalleryLink(token) {
+      const url = `https://clients.dominikphotofficial.lt/#/gallery/${token}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("Kliento galerijos nuoroda nukopijuota!", "success");
+      });
+    }
+
+    async function deleteGallery(id) {
+      if (!confirm("Ištrinti galeriją ir užverti prieigą klientui?")) return;
+      try {
+        await dbClients.collection('galleries').doc(id).delete();
+        showToast("Galerija ištrinta", "info");
+      } catch (e) {
+        showToast("Klaida trinant galeriją", "error");
+      }
+    }
+
+    document.getElementById('btn-create-portfolio-modal').addEventListener('click', () => {
+      openModal('modal-portfolio');
+    });
+
+    document.getElementById('btn-save-portfolio').addEventListener('click', async () => {
+      const title = document.getElementById('port-input-title').value.trim();
+      const category = document.getElementById('port-input-category').value;
+      const description = document.getElementById('port-input-desc').value.trim();
+      const fileInput = document.getElementById('port-file-input');
+
+      if (!title) {
+        showToast("Nurodykite projekto pavadinimą", "error");
+        return;
+      }
+
+      if (!dbMain) {
+        showToast("API 1 neinicijuotas", "error");
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-portfolio');
+      saveBtn.disabled = true;
+
+      try {
+        let coverUrl = '';
+
+        if (fileInput.files.length > 0 && storageMain) {
+          const file = fileInput.files[0];
+          const storageRef = storageMain.ref(`portfolio/cover_${Date.now()}_${file.name}`);
+          const uploadTask = storageRef.put(file);
+
+          const pWrap = document.getElementById('port-progress-bar-wrap');
+          const pFill = document.getElementById('port-progress-bar-fill');
+          pWrap.style.display = 'block';
+
+          await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed', 
+              (snap) => {
+                const progress = (snap.bytesTransferred / snap.totalBytes) * 100;
+                pFill.style.width = `${progress}%`;
+              }, 
+              (err) => reject(err), 
+              async () => {
+                coverUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                resolve();
+              }
+            );
+          });
+        }
+
+        await dbMain.collection('portfolio').add({
+          title,
+          category,
+          description,
+          coverUrl: coverUrl || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showToast("Projektas publikuotas portfolio", "success");
+        closeModal('modal-portfolio');
+        document.getElementById('port-input-title').value = '';
+        document.getElementById('port-input-desc').value = '';
+        document.getElementById('port-file-input').value = '';
+      } catch (e) {
+        showToast("Klaida išsaugant projektą: " + e.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+        document.getElementById('port-progress-bar-wrap').style.display = 'none';
+      }
+    });
+
+    async function deletePortfolioItem(id) {
+      if (!confirm("Ištrinti šį projektą iš portfolio?")) return;
+      try {
+        await dbMain.collection('portfolio').doc(id).delete();
+        showToast("Projektas ištrintas", "info");
+      } catch (e) {
+        showToast("Klaida trinant projektą", "error");
+      }
+    }
+
+    async function sendTelegramMessage(text) {
+      const token = state.telegramToken;
+      const chatId = state.telegramChatId;
+
+      if (!token || !chatId) {
+        showToast("Nurodykite Bot Token ir Chat ID skiltyje „Nustatymai & Bot“", "error");
+        return false;
+      }
+
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: text,
+            parse_mode: 'Markdown'
+          })
+        });
+
+        const data = await res.json();
+        if (data.ok) {
+          showToast("Pranešimas sėkmingai išsiųstas į Telegram!", "success");
+          return true;
+        } else {
+          showToast(`Telegram API klaida: ${data.description}`, "error");
+          return false;
+        }
+      } catch (e) {
+        showToast("Tinklo klaida siunčiant į Telegram", "error");
+        return false;
+      }
+    }
+
+    document.getElementById('setting-tg-token').value = state.telegramToken;
+    document.getElementById('setting-tg-chat-id').value = state.telegramChatId;
+
+    document.getElementById('btn-save-settings').addEventListener('click', () => {
+      const t = document.getElementById('setting-tg-token').value.trim();
+      const c = document.getElementById('setting-tg-chat-id').value.trim();
+      state.telegramToken = t;
+      state.telegramChatId = c;
+      localStorage.setItem('dp_tg_token', t);
+      localStorage.setItem('dp_tg_chat_id', c);
+      showToast("Nustatymai išsaugoti", "success");
+    });
+
+    document.getElementById('btn-test-telegram').addEventListener('click', () => {
+      sendTelegramMessage("⚡️ *Dominik Photo Admin:* Testinis pranešimas sėkmingai gautas!");
+    });
+
+    document.getElementById('leads-search-input').addEventListener('input', renderLeads);
+    document.getElementById('leads-filter-lang').addEventListener('change', renderLeads);
+    document.getElementById('leads-filter-status').addEventListener('change', renderLeads);
+    document.getElementById('gallery-search-input').addEventListener('input', renderGalleries);
+    document.getElementById('portfolio-search-input').addEventListener('input', renderPortfolio);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initLeadsListener();
+      initGalleriesListener();
+      initPortfolioListener();
+    });
+  </script>
+</body>
+</html>
