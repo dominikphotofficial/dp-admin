@@ -7,6 +7,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://w
 const appMain = initializeApp(window.CONFIG.firebaseMain, "mainApp");
 const dbMain = getFirestore(appMain);
 const authMain = getAuth(appMain);
+const storageMain = getStorage(appMain);
 
 const appClients = initializeApp(window.CONFIG.firebaseClients, "clientApp");
 const dbClients = getFirestore(appClients);
@@ -124,7 +125,7 @@ function updateStats() {
     document.getElementById('badge-gal-count').innerText = state.galleries.length;
 }
 
-// --- RENDER REQUESTS ---
+// --- MODULE 1: REQUESTS ---
 function renderTFP() {
     const list = document.getElementById('tfp-list');
     if (!state.tfpRequests.length) { list.innerHTML = '<div class="empty-placeholder">TFP užklausų nėra.</div>'; return; }
@@ -142,22 +143,13 @@ function renderTFP() {
                     <p><b>Idėja:</b><br>${escapeHtml(data.idea)}</p>
                 </div>
                 <div>
-                    <p><b>Data ir laikas:</b><br><input type="text" id="dt-${data.id}" value="${escapeHtml(data.date_time)}" class="form-input"></p>
-                    <p><b>Vieta:</b><br><input type="text" id="loc-${data.id}" value="${escapeHtml(data.location)}" class="form-input"></p>
-                    <p><b>Keisti statusą:</b><br>
-                    <select id="status-${data.id}" class="form-select">
-                        <option value="New" ${data.status === 'New' ? 'selected' : ''}>New (Nauja)</option>
-                        <option value="Confirmed" ${data.status === 'Confirmed' ? 'selected' : ''}>Confirmed (Patvirtinta)</option>
-                        <option value="Rescheduled" ${data.status === 'Rescheduled' ? 'selected' : ''}>Rescheduled (Perkelta)</option>
-                        <option value="Cancelled" ${data.status === 'Cancelled' ? 'selected' : ''}>Cancelled (Atšaukta)</option>
-                        <option value="Completed" ${data.status === 'Completed' ? 'selected' : ''}>Completed (Atlikta)</option>
-                    </select></p>
+                    <p><b>Data ir laikas:</b><br>${escapeHtml(data.date_time || '-')}</p>
+                    <p><b>Vieta:</b><br>${escapeHtml(data.location || '-')}</p>
                 </div>
             </div>
             <div class="req-actions">
-                <button class="cta-button btn-solid" onclick="prepareTFP('${data.id}', '${data.language}', '${data.email}', '${escapeHtml(data.name)}', '${escapeHtml(data.idea).replace(/'/g, "\\'")}')">Peržiūrėti ir Siųsti laišką</button>
-                <button class="cta-button" onclick="saveOnly('tfp_requests', '${data.id}', '')">Tik Išsaugoti</button>
-                <button class="cta-button btn-danger" onclick="deleteDocRecord('tfp_requests', '${data.id}')">Ištrinti</button>
+                <button class="cta-button btn-solid" onclick="openLeadModal('${data.id}', 'tfp_requests')"><i class="fa-solid fa-pen-to-square"></i> Atidaryti TŽ ir Valdymą</button>
+                <button class="cta-button btn-danger" onclick="deleteDocRecord('tfp_requests', '${data.id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `).join('');
@@ -178,105 +170,100 @@ function renderServices() {
                     <p><b>Paslauga:</b><br>${escapeHtml(data.serviceName)}</p>
                     <p><b>El. paštas:</b><br>${escapeHtml(data.email)}</p>
                     <p><b>Telefonas:</b><br>${escapeHtml(data.phone)}</p>
-                    <p><b>Apmokėjimas:</b><br>${escapeHtml(data.paymentMethod)}</p>
                 </div>
                 <div>
                     <p><b>Kaina:</b> ${data.finalPrice} € (Avansas: ${data.depositAmount} €)</p>
-                    <p><b>Data:</b><br><input type="text" id="srv-dt-${data.id}" value="${escapeHtml(data.preferredDate)} ${escapeHtml(data.preferredTime)}" class="form-input"></p>
-                    <p><b>Vieta:</b><br><input type="text" id="srv-loc-${data.id}" value="${escapeHtml(data.location)}" class="form-input"></p>
-                    <p><b>Keisti statusą:</b><br>
-                    <select id="srv-status-${data.id}" class="form-select">
-                        <option value="Pending" ${data.status === 'Pending' ? 'selected' : ''}>Pending (Laukia)</option>
-                        <option value="Confirmed" ${data.status === 'Confirmed' ? 'selected' : ''}>Confirmed (Patvirtinta)</option>
-                        <option value="Deposit Paid" ${data.status === 'Deposit Paid' ? 'selected' : ''}>Deposit Paid (Avansas gautas)</option>
-                        <option value="Completed" ${data.status === 'Completed' ? 'selected' : ''}>Completed (Atlikta)</option>
-                        <option value="Fully Paid" ${data.status === 'Fully Paid' ? 'selected' : ''}>Fully Paid (Pilnai apmokėta)</option>
-                        <option value="Cancelled" ${data.status === 'Cancelled' ? 'selected' : ''}>Cancelled (Atšaukta)</option>
-                    </select></p>
+                    <p><b>Data:</b><br>${escapeHtml(data.preferredDate)} ${escapeHtml(data.preferredTime)}</p>
+                    <p><b>Vieta:</b><br>${escapeHtml(data.location)}</p>
                 </div>
             </div>
             <div class="req-actions">
-                <button class="cta-button btn-solid" onclick="prepareService('${data.id}', '${data.language}', '${data.email}', '${escapeHtml(data.clientName)}', '${escapeHtml(data.serviceName)}', ${data.finalPrice}, ${data.depositAmount})">Peržiūrėti ir Siųsti laišką</button>
-                <button class="cta-button" onclick="saveOnly('service_requests', '${data.id}', 'srv-')">Tik Išsaugoti</button>
-                <button class="cta-button btn-danger" onclick="deleteDocRecord('service_requests', '${data.id}')">Ištrinti</button>
+                <button class="cta-button btn-solid" onclick="openLeadModal('${data.id}', 'service_requests')"><i class="fa-solid fa-pen-to-square"></i> Atidaryti TŽ ir Valdymą</button>
+                <button class="cta-button btn-danger" onclick="deleteDocRecord('service_requests', '${data.id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `).join('');
 }
 
-// --- EMAIL LOGIC ---
-window.prepareTFP = function(id, lang, email, name, idea) {
-    const newStatus = document.getElementById(`status-${id}`).value;
-    const newDate = document.getElementById(`dt-${id}`).value;
-    const newLoc = document.getElementById(`loc-${id}`).value;
+window.openLeadModal = function(id, collectionName) {
+    const lead = collectionName === 'tfp_requests' ? state.tfpRequests.find(l => l.id === id) : state.serviceRequests.find(l => l.id === id);
+    if (!lead) return;
+    
+    state.selectedLead = { ...lead, collectionName };
 
-    let templateKey = 'ServiceStatusUpdate';
-    if (newStatus === 'Confirmed') templateKey = 'TFPConfirmed';
-    else if (newStatus === 'Rescheduled') templateKey = 'TFPRescheduled';
-    else if (newStatus === 'Cancelled') templateKey = 'TFPCancelled';
-    else if (newStatus === 'Completed') templateKey = 'TFPCompleted';
+    document.getElementById('lead-modal-title').innerText = `Užklausa #${lead.id.substring(0, 6)}`;
+    document.getElementById('lead-modal-name').innerText = lead.name || lead.clientName || 'Be vardo';
+    document.getElementById('lead-modal-lang-badge').innerHTML = `<span class="badge badge-lt">${(lead.language || 'LT').toUpperCase()}</span>`;
+    document.getElementById('lead-modal-email').innerText = lead.email || '-';
+    document.getElementById('lead-modal-phone').innerText = lead.phone || lead.instagram || '-';
+    document.getElementById('lead-modal-message').innerText = lead.idea || lead.additionalInformation || 'Pranešimo tekstas tuščias';
+    document.getElementById('lead-modal-status-select').value = lead.status || 'New';
+    
+    document.getElementById('lead-modal-tz').value = lead.tz || '';
+    document.getElementById('lead-modal-links').value = lead.links || '';
 
-    const galleryPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const emailData = window.buildEmail(templateKey, lang, { name, date_time: newDate, location: newLoc, idea, status: newStatus, galleryUrl: "https://clients.dominikphotofficial.lt", galleryPin });
-
-    document.getElementById('modal-subject').value = emailData.subject;
-    document.getElementById('modal-html').value = emailData.html;
-    state.pendingEmailData = { collection: 'tfp_requests', id, email, newStatus, newDate, newLoc, galleryPin };
-    openModal('email-modal');
+    renderLeadReferences(lead.references || []);
+    openModal('modal-lead');
 };
 
-window.prepareService = function(id, lang, email, name, serviceName, finalPrice, depositAmount) {
-    const newStatus = document.getElementById(`srv-status-${id}`).value;
-    const newDate = document.getElementById(`srv-dt-${id}`).value;
-    const newLoc = document.getElementById(`srv-loc-${id}`).value;
+function renderLeadReferences(refs) {
+    const grid = document.getElementById('lead-modal-refs-grid');
+    grid.innerHTML = refs.map(url => `<a href="${url}" target="_blank"><img src="${url}" class="ref-thumb"></a>`).join('');
+}
 
-    let templateKey = 'ServiceStatusUpdate';
-    if (newStatus === 'Confirmed') templateKey = 'ServiceConfirmed';
-    else if (newStatus === 'Deposit Paid') templateKey = 'ServiceDepositPaid';
-    else if (newStatus === 'Fully Paid') templateKey = 'ServiceFullyPaid';
-    else if (newStatus === 'Completed') templateKey = 'ServiceCompleted';
-    else if (newStatus === 'Cancelled') templateKey = 'ServiceCancelled';
+document.getElementById('lead-modal-refs-input').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length || !state.selectedLead) return;
 
-    const galleryPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const emailData = window.buildEmail(templateKey, lang, { name, serviceName, status: newStatus, date_time: newDate, location: newLoc, finalPrice, depositAmount, galleryUrl: "https://clients.dominikphotofficial.lt", galleryPin });
+    const lead = state.selectedLead;
+    let currentRefs = lead.references || [];
 
-    document.getElementById('modal-subject').value = emailData.subject;
-    document.getElementById('modal-html').value = emailData.html;
-    state.pendingEmailData = { collection: 'service_requests', id, email, newStatus, newDate, newLoc, galleryPin };
-    openModal('email-modal');
-};
+    for (let file of files) {
+        const storageRef = ref(storageMain, `references/${lead.id}/${Date.now()}_${file.name}`);
+        const uploadTask = await uploadBytesResumable(storageRef, file);
+        const url = await getDownloadURL(uploadTask.ref);
+        currentRefs.push(url);
+    }
 
-window.saveOnly = async function(collectionName, id, prefix) {
-    const newStatus = document.getElementById(`${prefix}status-${id}`).value;
-    const newDate = document.getElementById(`${prefix}dt-${id}`).value;
-    const newLoc = document.getElementById(`${prefix}loc-${id}`).value;
-    try {
-        if(collectionName === 'tfp_requests') await updateDoc(doc(dbMain, collectionName, id), { status: newStatus, date_time: newDate, location: newLoc });
-        else await updateDoc(doc(dbMain, collectionName, id), { status: newStatus, preferredDate: newDate, location: newLoc });
-        showToast("Išsaugota sėkmingai!", "success");
-    } catch(e) { showToast("Klaida išsaugant.", "error"); }
-};
+    await updateDoc(doc(dbMain, lead.collectionName, lead.id), { references: currentRefs });
+    state.selectedLead.references = currentRefs;
+    renderLeadReferences(currentRefs);
+    showToast("Referencijos įkeltos", "success");
+});
 
-document.getElementById('modal-send-btn').addEventListener('click', async () => {
-    if(!state.pendingEmailData) return;
-    const btn = document.getElementById('modal-send-btn');
-    btn.disabled = true; btn.innerText = 'Siunčiama...';
+document.getElementById('btn-lead-save-status').addEventListener('click', async () => {
+    if (!state.selectedLead) return;
+    const lead = state.selectedLead;
+    const newStatus = document.getElementById('lead-modal-status-select').value;
+    const tz = document.getElementById('lead-modal-tz').value;
+    const links = document.getElementById('lead-modal-links').value;
 
     try {
-        const subject = document.getElementById('modal-subject').value;
-        const html = document.getElementById('modal-html').value;
-        const p = state.pendingEmailData;
+        await updateDoc(doc(dbMain, lead.collectionName, lead.id), { status: newStatus, tz, links });
+        showToast("TŽ ir Būsena išsaugota", "success");
+        closeModal('modal-lead');
+    } catch (e) { showToast("Klaida išsaugant", "error"); }
+});
 
-        let updatePayload = p.collection === 'tfp_requests' ? { status: p.newStatus, date_time: p.newDate, location: p.newLoc } : { status: p.newStatus, preferredDate: p.newDate, location: p.newLoc };
-        if (p.newStatus === 'Completed') updatePayload.galleryPin = p.galleryPin;
-
-        await updateDoc(doc(dbMain, p.collection, p.id), updatePayload);
-        await addDoc(collection(dbMain, "mail"), { to: p.email, message: { subject: subject, html: html } });
-
-        showToast("Išsaugota ir laiškas išsiųstas!", "success");
-        closeModal('email-modal');
-    } catch(e) { showToast("Klaida siunčiant.", "error"); } 
-    finally { btn.disabled = false; btn.innerText = 'Patvirtinti ir Siųsti'; }
+document.getElementById('btn-create-portal-from-lead').addEventListener('click', () => {
+    if (!state.selectedLead) return;
+    const lead = state.selectedLead;
+    closeModal('modal-lead');
+    
+    document.getElementById('cgTitle').value = lead.name || lead.clientName || '';
+    document.getElementById('cgEmail').value = lead.email || '';
+    document.getElementById('cgSubtitle').value = lead.serviceName || lead.type || 'Fotosesija';
+    
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    document.getElementById('cgClientId').value = `DP-${new Date().getFullYear()}-${rand}`;
+    document.getElementById('cgPin').value = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    state.pendingCreateFiles = [];
+    document.getElementById('cgPreviewGrid').innerHTML = '';
+    document.getElementById('cgDropLabel').innerText = "Tempkite nuotraukas čia arba spustelėkite";
+    document.getElementById('cgProgress').style.display = 'none';
+    
+    openModal('create-gallery-modal');
 });
 
 window.deleteDocRecord = async function(collectionName, id) {
@@ -286,12 +273,12 @@ window.deleteDocRecord = async function(collectionName, id) {
     }
 };
 
-// --- GALLERIES ---
+// --- MODULE 2: GALLERIES ---
 function renderGalleries() {
     const container = document.getElementById('galleriesContainer');
     const search = document.getElementById('gallerySearchInput').value.toLowerCase();
     
-    const filtered = state.galleries.filter(p => (p.title || '').toLowerCase().includes(search) || (p.pin || '').includes(search));
+    const filtered = state.galleries.filter(p => (p.title || '').toLowerCase().includes(search) || (p.clientId || '').toLowerCase().includes(search));
     
     if (!filtered.length) { container.innerHTML = '<div class="empty-placeholder">Projektų nerasta.</div>'; return; }
 
@@ -305,7 +292,7 @@ function renderGalleries() {
                     <h3>${escapeHtml(p.title || 'Be pavadinimo')}</h3>
                     <p>${escapeHtml(p.subtitle || '')}</p>
                 </div>
-                <div><span class="pin-tag">PIN: ${escapeHtml(p.pin)}</span></div>
+                <div><span class="pin-tag">ID: ${escapeHtml(p.clientId || p.pin)}</span></div>
                 <div class="row-text row-date">${count} kadrų</div>
                 <div class="row-actions">
                     <button class="icon-btn delete-btn" onclick="event.stopPropagation(); deleteGallery('${p.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -318,9 +305,13 @@ function renderGalleries() {
 document.getElementById('gallerySearchInput').addEventListener('input', renderGalleries);
 
 document.getElementById('btn-open-create-gallery').addEventListener('click', () => {
-    document.getElementById('cgTitle').value = ''; document.getElementById('cgSubtitle').value = '';
+    document.getElementById('cgTitle').value = ''; document.getElementById('cgSubtitle').value = ''; document.getElementById('cgEmail').value = '';
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    document.getElementById('cgClientId').value = `DP-${new Date().getFullYear()}-${rand}`;
     document.getElementById('cgPin').value = Math.floor(100000 + Math.random() * 900000).toString();
+    
     state.pendingCreateFiles = [];
+    document.getElementById('cgPreviewGrid').innerHTML = '';
     document.getElementById('cgDropLabel').innerText = "Tempkite nuotraukas čia arba spustelėkite";
     document.getElementById('cgProgress').style.display = 'none';
     openModal('create-gallery-modal');
@@ -334,18 +325,30 @@ cgDropBox.ondragover = (e) => { e.preventDefault(); cgDropBox.classList.add('dra
 cgDropBox.ondragleave = () => cgDropBox.classList.remove('dragover');
 cgDropBox.ondrop = (e) => {
     e.preventDefault(); cgDropBox.classList.remove('dragover');
-    state.pendingCreateFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-    document.getElementById('cgDropLabel').innerText = `Pasirinkta nuotraukų: ${state.pendingCreateFiles.length}`;
+    handleGalleryFiles(e.dataTransfer.files);
 };
-cgFileInput.onchange = (e) => {
-    state.pendingCreateFiles = Array.from(e.target.files);
-    document.getElementById('cgDropLabel').innerText = `Pasirinkta nuotraukų: ${state.pendingCreateFiles.length}`;
-};
+cgFileInput.onchange = (e) => handleGalleryFiles(e.target.files);
+
+function handleGalleryFiles(files) {
+    const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+    state.pendingCreateFiles = validFiles;
+    document.getElementById('cgDropLabel').innerText = `Pasirinkta nuotraukų: ${validFiles.length}`;
+    
+    const grid = document.getElementById('cgPreviewGrid');
+    grid.innerHTML = '';
+    validFiles.slice(0, 10).forEach(file => {
+        const url = URL.createObjectURL(file);
+        grid.innerHTML += `<img src="${url}" class="ref-thumb">`;
+    });
+    if(validFiles.length > 10) grid.innerHTML += `<span style="font-size:0.8rem; color:var(--text-muted); align-self:center;">+${validFiles.length - 10} daugiau</span>`;
+}
 
 document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
     const title = document.getElementById('cgTitle').value.trim();
     const subtitle = document.getElementById('cgSubtitle').value.trim();
+    const clientId = document.getElementById('cgClientId').value.trim();
     const pin = document.getElementById('cgPin').value.trim();
+    const email = document.getElementById('cgEmail').value.trim();
     const date = document.getElementById('cgDate').value || new Date().toISOString().split('T')[0];
 
     if (!title || !pin || state.pendingCreateFiles.length === 0) { showToast("Užpildykite pavadinimą, PIN ir pridėkite nuotraukų", "error"); return; }
@@ -357,7 +360,7 @@ document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
     try {
         for (let i = 0; i < state.pendingCreateFiles.length; i++) {
             const file = state.pendingCreateFiles[i];
-            const storageRef = ref(storageClients, `galleries/${pin}/${Date.now()}_${file.name}`);
+            const storageRef = ref(storageClients, `galleries/${clientId}/${Date.now()}_${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
             await new Promise((resolve, reject) => {
@@ -377,8 +380,8 @@ document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
             });
         }
 
-        await addDoc(collection(dbClients, "galleries"), { title, subtitle, pin, date, description: "", photos: uploaded, createdAt: new Date().toISOString() });
-        showToast("Projektas sukurtas!", "success"); closeModal('create-gallery-modal');
+        await addDoc(collection(dbClients, "galleries"), { title, subtitle, clientId, pin, client_email: email, date, description: "", photos: uploaded, createdAt: new Date().toISOString() });
+        showToast("Kliento portalas sukurtas!", "success"); closeModal('create-gallery-modal');
     } catch (error) { showToast("Klaida įkeliant.", "error"); } 
     finally { btn.disabled = false; document.getElementById('cgProgress').style.display = 'none'; }
 });
@@ -401,6 +404,7 @@ window.openWorkspace = function(id) {
     document.getElementById('wsStoryInput').value = p.description || '';
     document.getElementById('wsSetTitle').value = p.title || '';
     document.getElementById('wsSetSubtitle').value = p.subtitle || '';
+    document.getElementById('wsSetClientId').value = p.clientId || p.pin;
     document.getElementById('wsSetPin').value = p.pin || '';
     document.getElementById('wsSetDate').value = p.date || '';
     document.getElementById('wsSetEmail').value = p.client_email || '';
@@ -445,7 +449,7 @@ document.getElementById('wsFileInput').onchange = async (e) => {
     try {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const storageRef = ref(storageClients, `galleries/${state.activeProject.pin}/${Date.now()}_${file.name}`);
+            const storageRef = ref(storageClients, `galleries/${state.activeProject.clientId || state.activeProject.pin}/${Date.now()}_${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
             await new Promise((resolve, reject) => {
@@ -503,13 +507,48 @@ document.getElementById('wsDeleteGalleryBtn').onclick = async () => {
 };
 
 document.getElementById('wsShareBtn').onclick = () => {
-    navigator.clipboard.writeText(`PIN: ${state.activeProject.pin} | clients.dominikphotofficial.lt`);
-    showToast(`PIN kodas (${state.activeProject.pin}) nukopijuotas!`, "success");
+    navigator.clipboard.writeText(`Prisijungimas: ${state.activeProject.clientId || state.activeProject.pin} | PIN: ${state.activeProject.pin} | client.dominikphotofficial.lt`);
+    showToast(`Prisijungimo duomenys nukopijuoti!`, "success");
 };
 
 document.getElementById('wsPreviewBtn').onclick = () => {
-    window.open(`https://clients.dominikphotofficial.lt/#/gallery/${state.activeProject.token || state.activeProject.pin}`, '_blank');
+    window.open(`https://client.dominikphotofficial.lt/#/gallery/${state.activeProject.clientId || state.activeProject.pin}`, '_blank');
 };
+
+document.getElementById('wsSendAccessBtn').addEventListener('click', () => {
+    const p = state.activeProject;
+    const emailData = window.buildEmail('PortalAccess', 'lt', { 
+        name: p.title, 
+        clientId: p.clientId || p.pin, 
+        galleryPin: p.pin 
+    });
+
+    document.getElementById('modal-subject').value = emailData.subject;
+    document.getElementById('modal-html').value = emailData.html;
+    state.pendingEmailData = { collection: 'galleries', id: p.id, email: p.client_email };
+    openModal('email-modal');
+});
+
+document.getElementById('modal-send-btn').addEventListener('click', async () => {
+    if(!state.pendingEmailData) return;
+    const btn = document.getElementById('modal-send-btn');
+    btn.disabled = true; btn.innerText = 'Siunčiama...';
+
+    try {
+        const subject = document.getElementById('modal-subject').value;
+        const html = document.getElementById('modal-html').value;
+        const p = state.pendingEmailData;
+
+        if(p.email) {
+            await addDoc(collection(dbMain, "mail"), { to: p.email, message: { subject: subject, html: html } });
+            showToast("Laiškas išsiųstas!", "success");
+        } else {
+            showToast("Klientas neturi el. pašto adreso.", "error");
+        }
+        closeModal('email-modal');
+    } catch(e) { showToast("Klaida siunčiant.", "error"); } 
+    finally { btn.disabled = false; btn.innerText = 'Patvirtinti ir Siųsti'; }
+});
 
 // --- TELEGRAM ---
 document.getElementById('setting-tg-token').value = state.tgToken;
