@@ -1,4 +1,3 @@
-// app.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
@@ -25,7 +24,6 @@ const state = {
     tgChatId: localStorage.getItem('dp_admin_tg_chat_id') || ''
 };
 
-// --- AUTHENTICATION ---
 onAuthStateChanged(authMain, (user) => {
     const preloader = document.getElementById('preloader');
     if (preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
@@ -52,7 +50,6 @@ document.getElementById('btn-login-auth').addEventListener('click', async () => 
 
 document.getElementById('btn-logout').addEventListener('click', () => { signOut(authMain).then(() => showToast("Atsijungta", "info")); });
 
-// --- UTILS ---
 window.showToast = function(msg, type = 'info') {
     const wrap = document.getElementById('toast-wrap');
     const toast = document.createElement('div');
@@ -68,7 +65,6 @@ function escapeHtml(str) { return str ? String(str).replace(/&/g, '&amp;').repla
 window.openModal = function(id) { document.getElementById(id).classList.add('active'); };
 window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 
-// --- NAVIGATION ---
 window.switchView = function(viewName) {
     state.currentView = viewName;
     document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('active', item.getAttribute('data-view') === viewName));
@@ -100,7 +96,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// --- DATA LISTENERS ---
 function initDataListeners() {
     onSnapshot(query(collection(dbMain, "tfp_requests"), orderBy("createdAt", "desc")), (snap) => {
         state.tfpRequests = []; snap.forEach(doc => state.tfpRequests.push({ id: doc.id, ...doc.data() })); renderTFP(); updateStats();
@@ -125,7 +120,6 @@ function updateStats() {
     document.getElementById('badge-gal-count').innerText = state.galleries.length;
 }
 
-// --- MODULE 1: REQUESTS ---
 function renderTFP() {
     const list = document.getElementById('tfp-list');
     if (!state.tfpRequests.length) { list.innerHTML = '<div class="empty-placeholder">TFP užklausų nėra.</div>'; return; }
@@ -273,7 +267,6 @@ window.deleteDocRecord = async function(collectionName, id) {
     }
 };
 
-// --- MODULE 2: GALLERIES ---
 function renderGalleries() {
     const container = document.getElementById('galleriesContainer');
     const search = document.getElementById('gallerySearchInput').value.toLowerCase();
@@ -344,46 +337,79 @@ function handleGalleryFiles(files) {
 }
 
 document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
-    const title = document.getElementById('cgTitle').value.trim();
-    const subtitle = document.getElementById('cgSubtitle').value.trim();
-    const clientId = document.getElementById('cgClientId').value.trim();
-    const pin = document.getElementById('cgPin').value.trim();
-    const email = document.getElementById('cgEmail').value.trim();
-    const date = document.getElementById('cgDate').value || new Date().toISOString().split('T')[0];
-
-    if (!title || !pin || state.pendingCreateFiles.length === 0) { showToast("Užpildykite pavadinimą, PIN ir pridėkite nuotraukų", "error"); return; }
-
-    const btn = document.getElementById('cgSubmitBtn'); btn.disabled = true;
-    document.getElementById('cgProgress').style.display = 'block';
-
-    const uploaded = [];
     try {
-        for (let i = 0; i < state.pendingCreateFiles.length; i++) {
-            const file = state.pendingCreateFiles[i];
-            const storageRef = ref(storageClients, `galleries/${clientId}/${Date.now()}_${file.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
+        const title = document.getElementById('cgTitle').value.trim();
+        const subtitle = document.getElementById('cgSubtitle').value.trim();
+        const clientId = document.getElementById('cgClientId').value.trim();
+        const pin = document.getElementById('cgPin').value.trim();
+        const email = document.getElementById('cgEmail').value.trim();
+        const date = document.getElementById('cgDate').value || new Date().toISOString().split('T')[0];
 
-            await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snap) => {
-                        const percent = ((i + (snap.bytesTransferred / snap.totalBytes)) / state.pendingCreateFiles.length) * 100;
-                        document.getElementById('cgProgressThumb').style.width = `${percent}%`;
-                        document.getElementById('cgProgressCaption').innerText = `Keliama: ${i + 1} iš ${state.pendingCreateFiles.length}`;
-                    },
-                    (err) => reject(err),
-                    async () => {
-                        const url = await getDownloadURL(uploadTask.snapshot.ref);
-                        uploaded.push({ thumb: url, full: url, name: file.name });
-                        resolve();
-                    }
-                );
-            });
+        if (!title || !pin || !clientId) { 
+            showToast("Užpildykite pavadinimą, Client ID ir PIN kodą", "error"); 
+            return; 
         }
 
-        await addDoc(collection(dbClients, "galleries"), { title, subtitle, clientId, pin, client_email: email, date, description: "", photos: uploaded, createdAt: new Date().toISOString() });
-        showToast("Kliento portalas sukurtas!", "success"); closeModal('create-gallery-modal');
-    } catch (error) { showToast("Klaida įkeliant.", "error"); } 
-    finally { btn.disabled = false; document.getElementById('cgProgress').style.display = 'none'; }
+        const btn = document.getElementById('cgSubmitBtn'); 
+        btn.disabled = true;
+        document.getElementById('cgProgress').style.display = 'block';
+
+        const uploaded = [];
+        
+        if (state.pendingCreateFiles && state.pendingCreateFiles.length > 0) {
+            for (let i = 0; i < state.pendingCreateFiles.length; i++) {
+                const file = state.pendingCreateFiles[i];
+                const storageRef = ref(storageClients, `galleries/${clientId}/${Date.now()}_${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed',
+                        (snap) => {
+                            const percent = ((i + (snap.bytesTransferred / snap.totalBytes)) / state.pendingCreateFiles.length) * 100;
+                            document.getElementById('cgProgressThumb').style.width = `${percent}%`;
+                            document.getElementById('cgProgressCaption').innerText = `Keliama: ${i + 1} iš ${state.pendingCreateFiles.length}`;
+                        },
+                        (err) => reject(err),
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            uploaded.push({ thumb: url, full: url, name: file.name });
+                            resolve();
+                        }
+                    );
+                });
+            }
+        }
+
+        await addDoc(collection(dbClients, "galleries"), { 
+            title, 
+            subtitle, 
+            clientId, 
+            pin, 
+            client_email: email, 
+            date, 
+            description: "", 
+            photos: uploaded, 
+            createdAt: new Date().toISOString() 
+        });
+        
+        showToast("Kliento portalas sukurtas!", "success"); 
+        closeModal('create-gallery-modal');
+        
+        document.getElementById('cgTitle').value = '';
+        document.getElementById('cgSubtitle').value = '';
+        document.getElementById('cgEmail').value = '';
+        state.pendingCreateFiles = [];
+        document.getElementById('cgPreviewGrid').innerHTML = '';
+        document.getElementById('cgDropLabel').innerText = "Tempkite nuotraukas čia arba spustelėkite";
+
+    } catch (error) { 
+        alert("Klaida: " + error.message);
+        showToast("Klaida: " + error.message, "error"); 
+    } finally { 
+        const btn = document.getElementById('cgSubmitBtn');
+        btn.disabled = false; 
+        document.getElementById('cgProgress').style.display = 'none'; 
+    }
 });
 
 window.deleteGallery = async function(id) {
@@ -393,7 +419,6 @@ window.deleteGallery = async function(id) {
     }
 };
 
-// --- WORKSPACE ---
 window.openWorkspace = function(id) {
     const p = state.galleries.find(g => g.id === id);
     if(!p) return;
@@ -491,10 +516,7 @@ document.getElementById('wsSaveSettingsBtn').onclick = async () => {
     const client_email = document.getElementById('wsSetEmail').value.trim();
     const zip_url = document.getElementById('wsSetZip').value.trim();
 
-    if (!title || !pin) { 
-    showToast("Užpildykite pavadinimą ir PIN kodą", "error"); 
-    return; 
-}
+    if (!title || pin.length !== 6) { showToast("Užpildykite pavadinimą ir 6 skaitmenų PIN", "error"); return; }
 
     await updateDoc(doc(dbClients, "galleries", state.activeProject.id), { title, subtitle, pin, date, client_email: client_email || null, zip_url: zip_url || null });
     state.activeProject.title = title; state.activeProject.subtitle = subtitle; state.activeProject.pin = pin;
@@ -553,7 +575,6 @@ document.getElementById('modal-send-btn').addEventListener('click', async () => 
     finally { btn.disabled = false; btn.innerText = 'Patvirtinti ir Siųsti'; }
 });
 
-// --- TELEGRAM ---
 document.getElementById('setting-tg-token').value = state.tgToken;
 document.getElementById('setting-tg-chat-id').value = state.tgChatId;
 
