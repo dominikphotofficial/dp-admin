@@ -1,10 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dominikphotofficial.lt | Valdymo Centras</title>
+    <title>DP - ADMIN | DP.PORTFOLIO</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -14,14 +13,13 @@
 
     <div id="auth-overlay">
         <div class="auth-card">
-            <h2>Dominikphotofficial.lt</h2>
+            <h2>DP - ADMIN</h2>
             <div class="divider" style="margin: 10px auto 20px auto;"></div>
-            <p>Prisijunkite naudodami administratoriaus paskyrą.</p>
             <div style="text-align: left;">
                 <label class="field-label">El. Paštas</label>
-                <input type="email" id="login-email" class="form-input" placeholder="admin@pavyzdys.lt" required>
+                <input type="email" id="login-email" class="form-input" required>
                 <label class="field-label">Slaptažodis</label>
-                <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+                <input type="password" id="login-password" class="form-input" required>
                 <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">Prisijungti</button>
             </div>
         </div>
@@ -31,7 +29,7 @@
         <aside id="sidebar">
             <div class="brand-wrap">
                 <div class="brand-title">DP - ADMIN</div>
-                <div class="brand-sub">Dominikphotofficial.lt</div>
+                <div class="brand-sub">DP.PORTFOLIO</div>
             </div>
             <ul class="sidebar-menu">
                 <li class="menu-item active" data-view="dashboard"><button><i class="fa-solid fa-chart-pie"></i> Apžvalga</button></li>
@@ -55,7 +53,6 @@
 
             <main class="content-wrapper">
                 
-                <!-- DASHBOARD -->
                 <section id="view-dashboard" class="view-section active">
                     <div class="stats-grid">
                         <div class="stat-box">
@@ -73,7 +70,6 @@
                     </div>
                 </section>
 
-                <!-- REQUESTS (TFP & SERVICES) -->
                 <section id="view-requests" class="view-section">
                     <div class="tabs">
                         <button class="tab-btn active" data-reqtab="tfp-tab">TFP Užklausos</button>
@@ -89,7 +85,6 @@
                     </div>
                 </section>
 
-                <!-- GALLERIES -->
                 <section id="view-galleries" class="view-section">
                     <div class="top-toolbar">
                         <div style="position: relative; flex: 1; max-width: 400px;">
@@ -102,7 +97,6 @@
                     <div class="project-table-card" id="galleriesContainer"></div>
                 </section>
 
-                <!-- WORKSPACE (SINGLE GALLERY) -->
                 <section id="view-workspace" class="view-section">
                     <button class="back-nav" id="wsBackBtn">
                         <i class="fa-solid fa-arrow-left"></i> Visi projektai
@@ -110,7 +104,7 @@
 
                     <div class="workspace-header">
                         <div>
-                            <h1 class="page-title" id="wsGalleryTitle" style="text-transform: none;">Kraunama...</h1>
+                            <h1 class="page-title" id="wsGalleryTitle" style="text-transform: none;"></h1>
                             <p id="wsGallerySubtitle" style="font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-top:4px;"></p>
                         </div>
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -138,7 +132,7 @@
                         </div>
                         <div class="progress-indicator" id="wsUploadProgress">
                             <div class="progress-bar-rail"><div class="progress-bar-thumb" id="wsProgressFill"></div></div>
-                            <p class="progress-caption" id="wsProgressText">Įkeliama...</p>
+                            <p class="progress-caption" id="wsProgressText"></p>
                         </div>
                         <div class="photo-matrix" id="wsPhotosGrid"></div>
                     </div>
@@ -146,7 +140,7 @@
                     <div id="wsStoryTab" class="tab-content">
                         <div style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: var(--radius); max-width: 800px;">
                             <label class="field-label" style="margin-top: 0;">Fotosesijos istorija / Padėkos tekstas</label>
-                            <textarea id="wsStoryInput" class="form-textarea" style="height: 200px;" placeholder="Tekstas..."></textarea>
+                            <textarea id="wsStoryInput" class="form-textarea" style="height: 200px;"></textarea>
                             <button class="cta-button btn-solid" id="wsSaveStoryBtn" style="margin-top: 20px;">Išsaugoti tekstą</button>
                         </div>
                     </div>
@@ -173,7 +167,6 @@
                     </div>
                 </section>
 
-                <!-- SETTINGS -->
                 <section id="view-settings" class="view-section">
                     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); max-width: 650px;">
                         <div style="padding: 22px 30px; border-bottom: 1px solid var(--border-color);">
@@ -181,9 +174,9 @@
                         </div>
                         <div style="padding: 30px;">
                             <label class="field-label" style="margin-top: 0;">Telegram Bot Token</label>
-                            <input type="password" id="setting-tg-token" class="form-input" placeholder="7123456789:AAHk...">
+                            <input type="password" id="setting-tg-token" class="form-input">
                             <label class="field-label">Telegram Chat ID / Channel ID</label>
-                            <input type="text" id="setting-tg-chat-id" class="form-input" placeholder="-1001234567890 arba 12345678">
+                            <input type="text" id="setting-tg-chat-id" class="form-input">
                             <div style="display: flex; gap: 12px; margin-top: 25px;">
                                 <button class="cta-button btn-solid" id="btn-save-settings">Išsaugoti Parametrus</button>
                                 <button class="cta-button" id="btn-test-telegram"><i class="fa-solid fa-paper-plane"></i> Testuoti Botą</button>
@@ -196,36 +189,34 @@
         </div>
     </div>
 
-    <!-- MODALS -->
     <div class="modal-overlay" id="modal-lead">
         <div class="modal-card" style="max-width: 850px;">
             <div class="modal-header">
-                <h3 id="lead-modal-title">Užklausos Valdymas & TŽ</h3>
+                <h3 id="lead-modal-title"></h3>
                 <button class="action-icon-btn" onclick="closeModal('modal-lead')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
                 <div class="grid-2">
-                    <div><span class="field-label" style="margin-top: 0;">Kliento Vardas</span><div id="lead-modal-name" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-color);">-</div></div>
-                    <div><span class="field-label" style="margin-top: 0;">Kalbos Versija</span><div id="lead-modal-lang-badge">-</div></div>
+                    <div><span class="field-label" style="margin-top: 0;">Kliento Vardas</span><div id="lead-modal-name" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-color);"></div></div>
+                    <div><span class="field-label" style="margin-top: 0;">Kalbos Versija</span><div id="lead-modal-lang-badge"></div></div>
                 </div>
                 <div class="grid-2" style="margin-top: 15px;">
-                    <div><span class="field-label" style="margin-top: 0;">El. Paštas</span><div id="lead-modal-email" style="font-weight: 500;">-</div></div>
-                    <div><span class="field-label" style="margin-top: 0;">Telefonas / Instagram</span><div id="lead-modal-phone">-</div></div>
+                    <div><span class="field-label" style="margin-top: 0;">El. Paštas</span><div id="lead-modal-email" style="font-weight: 500;"></div></div>
+                    <div><span class="field-label" style="margin-top: 0;">Telefonas / Instagram</span><div id="lead-modal-phone"></div></div>
                 </div>
                 <span class="field-label">Pranešimas / Užklausos Idėja</span>
-                <div id="lead-modal-message" style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 14px; font-size: 0.9rem; margin-bottom: 20px;">-</div>
+                <div id="lead-modal-message" style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 14px; font-size: 0.9rem; margin-bottom: 20px;"></div>
 
-                <!-- TŽ & References Section -->
                 <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 10px;">
                     <h4 style="font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; color: var(--accent-color); margin-bottom: 15px;">Techninė Užduotis (TŽ) ir Referencijos</h4>
                     <div class="grid-2">
                         <div>
                             <label class="field-label" style="margin-top: 0;">Sutartos detalės (TŽ)</label>
-                            <textarea id="lead-modal-tz" class="form-textarea" style="height: 100px;" placeholder="Sutartos detalės, apranga, lokacijos..."></textarea>
+                            <textarea id="lead-modal-tz" class="form-textarea" style="height: 100px;"></textarea>
                         </div>
                         <div>
                             <label class="field-label" style="margin-top: 0;">Papildomos nuorodos</label>
-                            <textarea id="lead-modal-links" class="form-textarea" style="height: 100px;" placeholder="Pinterest, Moodboard nuorodos..."></textarea>
+                            <textarea id="lead-modal-links" class="form-textarea" style="height: 100px;"></textarea>
                         </div>
                     </div>
                     <div style="margin-top: 15px;">
@@ -306,7 +297,7 @@
 
                 <div class="progress-indicator" id="cgProgress">
                     <div class="progress-bar-rail"><div class="progress-bar-thumb" id="cgProgressThumb"></div></div>
-                    <p class="progress-caption" id="cgProgressCaption">Įkeliama...</p>
+                    <p class="progress-caption" id="cgProgressCaption"></p>
                 </div>
             </div>
             <div class="modal-footer">
