@@ -10,6 +10,7 @@ const storageMain = getStorage(appMain);
 
 const appClients = initializeApp(window.CONFIG.firebaseClients, "clientApp");
 const dbClients = getFirestore(appClients);
+const authClients = getAuth(appClients);
 const storageClients = getStorage(appClients);
 
 const state = {
@@ -34,7 +35,11 @@ onAuthStateChanged(authMain, (user) => {
         document.getElementById('display-admin-email').innerText = user.email;
         initDataListeners();
     } else {
-        if (user) { signOut(authMain); showToast("Prieiga uždrausta.", "error"); }
+        if (user) { 
+            signOut(authClients);
+            signOut(authMain); 
+            showToast("Prieiga uždrausta.", "error"); 
+        }
         document.getElementById('auth-overlay').style.display = 'flex';
         document.getElementById('app-layout').classList.remove('active');
     }
@@ -44,11 +49,17 @@ document.getElementById('btn-login-auth').addEventListener('click', async () => 
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
     if (email.toLowerCase() !== window.CONFIG.ADMIN_EMAIL.toLowerCase()) { showToast("Prieiga uždrausta.", "error"); return; }
-    try { await signInWithEmailAndPassword(authMain, email, pass); showToast("Sėkmingai prisijungta!", "success"); } 
-    catch (err) { showToast("Autorizacijos klaida.", "error"); }
+    try { 
+        await signInWithEmailAndPassword(authMain, email, pass);
+        await signInWithEmailAndPassword(authClients, email, pass);
+        showToast("Sėkmingai prisijungta!", "success"); 
+    } catch (err) { showToast("Autorizacijos klaida.", "error"); }
 });
 
-document.getElementById('btn-logout').addEventListener('click', () => { signOut(authMain).then(() => showToast("Atsijungta", "info")); });
+document.getElementById('btn-logout').addEventListener('click', () => { 
+    signOut(authClients);
+    signOut(authMain).then(() => showToast("Atsijungta", "info")); 
+});
 
 window.showToast = function(msg, type = 'info') {
     const wrap = document.getElementById('toast-wrap');
@@ -352,6 +363,7 @@ document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
 
         const btn = document.getElementById('cgSubmitBtn'); 
         btn.disabled = true;
+        btn.innerText = 'Kuriama...';
         document.getElementById('cgProgress').style.display = 'block';
 
         const uploaded = [];
@@ -403,11 +415,12 @@ document.getElementById('cgSubmitBtn').addEventListener('click', async () => {
         document.getElementById('cgDropLabel').innerText = "Tempkite nuotraukas čia arba spustelėkite";
 
     } catch (error) { 
-        alert("Klaida: " + error.message);
+        alert("Sistemos klaida: " + error.message);
         showToast("Klaida: " + error.message, "error"); 
     } finally { 
         const btn = document.getElementById('cgSubmitBtn');
         btn.disabled = false; 
+        btn.innerText = 'Sukurti portalą';
         document.getElementById('cgProgress').style.display = 'none'; 
     }
 });
