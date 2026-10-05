@@ -446,7 +446,8 @@ window.openWorkspace = function(id) {
     document.getElementById('wsSetPin').value = p.pin || '';
     document.getElementById('wsSetDate').value = p.date || '';
     document.getElementById('wsSetEmail').value = p.client_email || '';
-    document.getElementById('wsSetZip').value = p.zip_url || '';
+    const wsZipEl = document.getElementById('wsSetZip');
+    if (wsZipEl) wsZipEl.value = p.zip_url || '';
 
     renderWorkspacePhotos();
     switchView('workspace');
@@ -527,7 +528,8 @@ document.getElementById('wsSaveSettingsBtn').onclick = async () => {
     const pin = document.getElementById('wsSetPin').value.trim();
     const date = document.getElementById('wsSetDate').value;
     const client_email = document.getElementById('wsSetEmail').value.trim();
-    const zip_url = document.getElementById('wsSetZip').value.trim();
+    const wsZipEl = document.getElementById('wsSetZip');
+    const zip_url = wsZipEl ? wsZipEl.value.trim() : '';
 
     if (!title || pin.length !== 6) { showToast("Užpildykite pavadinimą ir 6 skaitmenų PIN", "error"); return; }
 
