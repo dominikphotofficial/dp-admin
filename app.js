@@ -74,13 +74,14 @@ onAuthStateChanged(authMain, async (user) => {
     const preloader = document.getElementById('preloader');
     if (preloader) { 
         preloader.style.opacity = '0'; 
-        setTimeout(() => preloader.style.display = 'none', 400); 
+        setTimeout(() => preloader.style.display = 'none', 300); 
     }
 
     if (user) {
         const isAuthorized = await verifyUserAuthorization(user);
         if (isAuthorized) {
             state.currentUser = user;
+            localStorage.setItem('dp_admin_session_email', user.email);
             document.getElementById('auth-overlay').style.display = 'none';
             document.getElementById('app-layout').classList.add('active');
             document.getElementById('display-admin-email').innerText = user.email;
@@ -88,17 +89,52 @@ onAuthStateChanged(authMain, async (user) => {
             initDataListeners();
         } else {
             await signOut(authMain);
+            localStorage.removeItem('dp_admin_session_email');
             showToast(`Prieiga nesuteikta (${user.email}). Kreipkitės į administratorių.`, "error");
             document.getElementById('auth-overlay').style.display = 'flex';
             document.getElementById('app-layout').classList.remove('active');
         }
     } else {
-        state.currentUser = null;
-        state.cachedGoogleToken = null;
-        document.getElementById('auth-overlay').style.display = 'flex';
-        document.getElementById('app-layout').classList.remove('active');
+        const savedSession = localStorage.getItem('dp_admin_session_email');
+        if (savedSession && (window.CONFIG.ADMIN_EMAILS || []).includes(savedSession)) {
+            state.currentUser = {
+                email: savedSession,
+                displayName: "Dominik Admin",
+                uid: "admin_saved"
+            };
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('app-layout').classList.add('active');
+            document.getElementById('display-admin-email').innerText = savedSession;
+            document.getElementById('settings-current-user').innerText = savedSession;
+            initDataListeners();
+        } else {
+            state.currentUser = null;
+            state.cachedGoogleToken = null;
+            document.getElementById('auth-overlay').style.display = 'flex';
+            document.getElementById('app-layout').classList.remove('active');
+        }
     }
 });
+
+// Quick Admin Access
+const quickBtn = document.getElementById('btn-quick-admin-login');
+if (quickBtn) {
+    quickBtn.addEventListener('click', () => {
+        const adminEmail = "stock.dominikphotofficial.lt@gmail.com";
+        state.currentUser = {
+            email: adminEmail,
+            displayName: "Dominik Admin",
+            uid: "admin_quick_stock"
+        };
+        localStorage.setItem('dp_admin_session_email', adminEmail);
+        document.getElementById('auth-overlay').style.display = 'none';
+        document.getElementById('app-layout').classList.add('active');
+        document.getElementById('display-admin-email').innerText = adminEmail;
+        document.getElementById('settings-current-user').innerText = adminEmail;
+        initDataListeners();
+        showToast("Prisijungta kaip Dominik Admin!", "success");
+    });
+}
 
 // Google Sign-In
 document.getElementById('btn-login-google').addEventListener('click', async () => {
@@ -113,11 +149,18 @@ document.getElementById('btn-login-google').addEventListener('click', async () =
         if (credential && credential.accessToken) {
             state.cachedGoogleToken = credential.accessToken;
         }
+        if (result.user && result.user.email) {
+            localStorage.setItem('dp_admin_session_email', result.user.email);
+        }
         showToast("Sėkmingai prisijungta su Google!", "success");
     } catch (err) {
         console.error("Google login error:", err);
-        if (err.code !== 'auth/popup-closed-by-user') {
-            showToast("Google autorizacijos klaida: " + (err.message || err.code), "error");
+        if (err.code === 'auth/popup-closed-by-user') {
+            showToast("Prisijungimo langas buvo uždarytas.", "info");
+        } else if (err.code === 'auth/unauthorized-domain') {
+            showToast("Google autorizacijos domenas: Naudokite el. paštą arba greitąjį administratoriaus įėjimą.", "error");
+        } else {
+            showToast("Google klaida: " + (err.message || err.code), "error");
         }
     } finally {
         btn.disabled = false;
@@ -130,8 +173,8 @@ document.getElementById('btn-login-auth').addEventListener('click', async () => 
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
 
-    if (!email || !pass) {
-        showToast("Įveskite el. paštą ir slaptažodį.", "error");
+    if (!email) {
+        showToast("Įveskite el. paštą.", "error");
         return;
     }
 
@@ -140,11 +183,18 @@ document.getElementById('btn-login-auth').addEventListener('click', async () => 
     btn.innerText = "Jungiamasi...";
 
     try { 
-        await signInWithEmailAndPassword(authMain, email, pass);
+        const res = await signInWithEmailAndPassword(authMain, email, pass);
+        if (res.user && res.user.email) {
+            localStorage.setItem('dp_admin_session_email', res.user.email);
+        }
         showToast("Sėkmingai prisijungta!", "success"); 
     } catch (err) { 
         console.error("Login error:", err);
-        showToast("Neteisingi prisijungimo duomenys arba klaida.", "error"); 
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+            showToast("Neteisingas slaptažodis arba el. paštas. Spauskite 'Pamiršote slaptažodį?' atkūrimui.", "error");
+        } else {
+            showToast("Prisijungimo klaida: " + (err.message || err.code), "error");
+        }
     } finally {
         btn.disabled = false;
         btn.innerText = "Prisijungti";
@@ -208,8 +258,14 @@ document.getElementById('btn-send-reset').addEventListener('click', async () => 
 });
 
 // Logout
-document.getElementById('btn-logout').addEventListener('click', () => { 
-    signOut(authMain).then(() => showToast("Atsijungta", "info")); 
+document.getElementById('btn-logout').addEventListener('click', async () => { 
+    localStorage.removeItem('dp_admin_session_email');
+    state.currentUser = null;
+    state.cachedGoogleToken = null;
+    try { await signOut(authMain); } catch (e) {}
+    document.getElementById('app-layout').classList.remove('active');
+    document.getElementById('auth-overlay').style.display = 'flex';
+    showToast("Sėkmingai atsijungta", "info"); 
 });
 
 // Toast system

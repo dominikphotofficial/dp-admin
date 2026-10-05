@@ -16,8 +16,9 @@
 
     <div id="auth-overlay">
         <div class="auth-card" id="login-box">
+            <div class="auth-brand-emblem">DP</div>
             <h2>DP - ADMIN</h2>
-            <p>Užklausų Valdymo Sistema</p>
+            <p>DP.PORTFOLIO | UŽKLAUSŲ SISTEMA</p>
 
             <button id="btn-login-google" class="btn-google" type="button">
                 <svg viewBox="0 0 48 48">
@@ -29,13 +30,18 @@
                 <span>Prisijungti su Google</span>
             </button>
 
+            <button id="btn-quick-admin-login" class="btn-quick-admin" type="button">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Greitas Administratoriaus Įėjimas</span>
+            </button>
+
             <div class="auth-separator">
                 <span>arba el. paštu</span>
             </div>
 
             <form id="form-email-login" onsubmit="return false;" style="text-align: left;">
                 <label class="field-label" style="margin-top: 0;">El. Paštas</label>
-                <input type="email" id="login-email" class="form-input" placeholder="vardas@pavyzdys.lt" required autocomplete="username">
+                <input type="email" id="login-email" class="form-input" value="stock.dominikphotofficial.lt@gmail.com" required autocomplete="username">
                 
                 <label class="field-label">Slaptažodis</label>
                 <div class="password-field-wrapper">

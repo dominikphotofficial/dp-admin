@@ -55,10 +55,11 @@ window.CONFIG = {
         "stock.dominikphotofficial.lt@gmail.com"
     ],
     BRAND_NAME: "DP.PORTFOLIO",
+    AUTH_HANDLER_URL: "https://dominikphotofficial.lt/__/auth/handler",
     
     firebaseMain: {
         apiKey: "AIzaSyBxhDy4I4HZnqOAvwWE3JyjYsuy_Tg86xE",
-        authDomain: "tfp-form.firebaseapp.com",
+        authDomain: "dominikphotofficial.lt",
         projectId: "tfp-form",
         storageBucket: "tfp-form.firebasestorage.app",
         messagingSenderId: "542082314917",
