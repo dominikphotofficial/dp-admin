@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DP - ADMIN | DP.PORTFOLIO</title>
-    <meta name="description" content="DP - ADMIN valdymo pultas ir klientų galerijų administravimas.">
-    <meta property="og:title" content="DP - ADMIN | DP.PORTFOLIO">
-    <meta property="og:description" content="DP - ADMIN valdymo pultas ir klientų galerijų administravimas.">
+    <title>DP - ADMIN | Užklausų Valdymo Sistema</title>
+    <meta name="description" content="DP - ADMIN fotosesijų ir paslaugų užklausų valdymo sistema bei Google Sheets integracija.">
+    <meta property="og:title" content="DP - ADMIN | Užklausų Valdymo Sistema">
+    <meta property="og:description" content="DP - ADMIN fotosesijų ir paslaugų užklausų valdymo sistema bei Google Sheets integracija.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -15,16 +15,58 @@
     <div id="preloader"><div class="loader"></div></div>
 
     <div id="auth-overlay">
-        <div class="auth-card">
+        <div class="auth-card" id="login-box">
             <h2>DP - ADMIN</h2>
-            <div class="divider" style="margin: 10px auto 20px auto;"></div>
-            <div style="text-align: left;">
-                <label class="field-label">El. Paštas</label>
-                <input type="email" id="login-email" class="form-input" required>
-                <label class="field-label">Slaptažodis</label>
-                <input type="password" id="login-password" class="form-input" required>
-                <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">Prisijungti</button>
+            <p>Užklausų Valdymo Sistema</p>
+
+            <button id="btn-login-google" class="btn-google" type="button">
+                <svg viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                <span>Prisijungti su Google</span>
+            </button>
+
+            <div class="auth-separator">
+                <span>arba el. paštu</span>
             </div>
+
+            <form id="form-email-login" onsubmit="return false;" style="text-align: left;">
+                <label class="field-label" style="margin-top: 0;">El. Paštas</label>
+                <input type="email" id="login-email" class="form-input" placeholder="vardas@pavyzdys.lt" required autocomplete="username">
+                
+                <label class="field-label">Slaptažodis</label>
+                <div class="password-field-wrapper">
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle-btn" id="btn-toggle-password" title="Rodyti slaptažodį">
+                        <i class="fa-solid fa-eye" id="toggle-password-icon"></i>
+                    </button>
+                </div>
+
+                <button id="btn-login-auth" class="cta-button btn-solid" style="width: 100%; margin-top: 25px;">Prisijungti</button>
+            </form>
+
+            <div class="auth-sublinks">
+                <button type="button" id="btn-show-forgot" class="text-link">Pamiršote slaptažodį?</button>
+            </div>
+        </div>
+
+        <div class="auth-card" id="reset-password-box" style="display: none;">
+            <button type="button" class="auth-back-btn" id="btn-back-to-login">
+                <i class="fa-solid fa-arrow-left"></i> Grįžti į prisijungimą
+            </button>
+            <h2>Atkurti Slaptažodį</h2>
+            <p>Įveskite savo el. paštą ir mes atsiųsime slaptažodžio nustatymo nuorodą.</p>
+
+            <form id="form-reset-password" onsubmit="return false;" style="text-align: left;">
+                <label class="field-label" style="margin-top: 0;">Jūsų El. Paštas</label>
+                <input type="email" id="reset-email" class="form-input" placeholder="vardas@pavyzdys.lt" required>
+                <button type="button" id="btn-send-reset" class="cta-button btn-solid" style="width: 100%; margin-top: 22px;">
+                    Siųsti Atkūrimo Nuorodą
+                </button>
+            </form>
         </div>
     </div>
 
@@ -32,12 +74,13 @@
         <aside id="sidebar">
             <div class="brand-wrap">
                 <div class="brand-title">DP - ADMIN</div>
-                <div class="brand-sub">DP.PORTFOLIO</div>
+                <div class="brand-sub">Užklausų Valdymas</div>
             </div>
             <ul class="sidebar-menu">
                 <li class="menu-item active" data-view="dashboard"><button><i class="fa-solid fa-chart-pie"></i> Apžvalga</button></li>
                 <li class="menu-item" data-view="requests"><button><i class="fa-solid fa-envelope-open-text"></i> Užklausos <span class="badge-counter" id="badge-req-count">0</span></button></li>
-                <li class="menu-item" data-view="galleries"><button><i class="fa-solid fa-images"></i> Galerijos <span class="badge-counter" id="badge-gal-count">0</span></button></li>
+                <li class="menu-item" data-view="sheets"><button><i class="fa-solid fa-table"></i> Google Sheets</button></li>
+                <li class="menu-item" data-view="team"><button><i class="fa-solid fa-users-gear"></i> Komanda <span class="badge-counter" id="badge-team-count">0</span></button></li>
                 <li class="menu-item" data-view="settings"><button><i class="fa-solid fa-sliders"></i> Nustatymai</button></li>
             </ul>
         </aside>
@@ -67,16 +110,42 @@
                             <div class="stat-value" id="stat-srv-new">0</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-header"><span>Aktyvios Galerijos</span><i class="fa-solid fa-images" style="color: var(--accent-light);"></i></div>
-                            <div class="stat-value" id="stat-gal-active">0</div>
+                            <div class="stat-header"><span>Visos Užklausos</span><i class="fa-solid fa-inbox" style="color: var(--accent-light);"></i></div>
+                            <div class="stat-value" id="stat-req-total">0</div>
                         </div>
+                        <div class="stat-box">
+                            <div class="stat-header"><span>Komandos Nariai</span><i class="fa-solid fa-user-shield" style="color: var(--accent-light);"></i></div>
+                            <div class="stat-value" id="stat-team-count">0</div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 25px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="font-size: 0.95rem; letter-spacing: 2px;">Paskutinės Užklausos</h3>
+                            <button class="cta-button" onclick="switchView('requests')">Žiūrėti Visas</button>
+                        </div>
+                        <div id="dashboard-recent-list"></div>
                     </div>
                 </section>
 
                 <section id="view-requests" class="view-section">
+                    <div class="filter-bar">
+                        <input type="text" id="requestSearchInput" class="form-input filter-search" placeholder="Ieškoti pagal vardą, el. paštą, telefoną ar vietą...">
+                        <select id="requestStatusFilter" class="form-select filter-select">
+                            <option value="all">Visi statusai</option>
+                            <option value="New">Naujas (New)</option>
+                            <option value="Pending">Laukiama (Pending)</option>
+                            <option value="Confirmed">Patvirtinta</option>
+                            <option value="Completed">Atlikta</option>
+                            <option value="Cancelled">Atšaukta</option>
+                        </select>
+                        <button class="cta-button" id="btn-export-csv" title="Atsisiųsti CSV failą"><i class="fa-solid fa-file-csv"></i> Eksportuoti CSV</button>
+                        <button class="cta-button btn-solid" onclick="switchView('sheets')"><i class="fa-solid fa-table"></i> Google Sheets</button>
+                    </div>
+
                     <div class="tabs">
-                        <button class="tab-btn active" data-reqtab="tfp-tab">TFP Užklausos</button>
-                        <button class="tab-btn" data-reqtab="srv-tab">Mokamos Paslaugos</button>
+                        <button class="tab-btn active" data-reqtab="tfp-tab">TFP Užklausos (<span id="count-tfp-tab">0</span>)</button>
+                        <button class="tab-btn" data-reqtab="srv-tab">Mokamos Paslaugos (<span id="count-srv-tab">0</span>)</button>
                     </div>
 
                     <div id="tfp-tab" class="tab-content active">
@@ -88,105 +157,159 @@
                     </div>
                 </section>
 
-                <section id="view-galleries" class="view-section">
-                    <div class="top-toolbar">
-                        <div style="position: relative; flex: 1; max-width: 400px;">
-                            <input type="text" id="gallerySearchInput" class="form-input" placeholder="Ieškoti projekto arba PIN...">
+                <section id="view-sheets" class="view-section">
+                    <div class="sheets-banner">
+                        <div class="sheets-info">
+                            <h3><i class="fa-solid fa-table-cells" style="color: #0F9D58; margin-right: 8px;"></i> Google Sheets Sinchronizavimas</h3>
+                            <p>Sujunkite savo užklausų srautą tiesiogiai su „Google Sheets“. Eksportuokite visas TFP ir mokamų fotosesijų užklausas vienu paspaudimu arba atsisiųskite paruoštą CSV lentelę.</p>
                         </div>
-                        <button class="cta-button btn-solid" id="btn-open-create-gallery">
-                            <i class="fa-solid fa-plus"></i> Naujas Projektas
-                        </button>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn-sheets-action" id="btn-sync-sheets"><i class="fa-solid fa-rotate"></i> Eksportuoti į Google Sheets</button>
+                            <button class="cta-button" id="btn-sheets-download-csv"><i class="fa-solid fa-download"></i> Atsisiųsti CSV</button>
+                        </div>
                     </div>
-                    <div class="project-table-card" id="galleriesContainer"></div>
+
+                    <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 25px; margin-bottom: 25px;">
+                        <h4 style="font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 15px; color: var(--accent-color);">Konfigūracija</h4>
+                        <div class="grid-2">
+                            <div>
+                                <label class="field-label" style="margin-top: 0;">Google Spreadsheet ID arba URL</label>
+                                <input type="text" id="setting-sheet-id" class="form-input" placeholder="pvz. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
+                            </div>
+                            <div style="display: flex; align-items: flex-end;">
+                                <button class="cta-button btn-solid" id="btn-save-sheet-id" style="height: 48px;">Išsaugoti Sheet Nuorodą</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-table-card">
+                        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-family: var(--font-heading); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Užklausų Lentelės Peržiūra (Google Sheets Format)</span>
+                            <span id="sheets-table-count" style="font-size: 0.8rem; color: var(--text-muted);">0 įrašų</span>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tipas</th>
+                                        <th>Vardas</th>
+                                        <th>El. Paštas</th>
+                                        <th>Kontaktai</th>
+                                        <th>Data / Laikas</th>
+                                        <th>Vieta</th>
+                                        <th>Kaina / Avansas</th>
+                                        <th>Statusas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sheets-preview-tbody">
+                                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Užklausų nėra</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
 
-                <section id="view-workspace" class="view-section">
-                    <button class="back-nav" id="wsBackBtn">
-                        <i class="fa-solid fa-arrow-left"></i> Visi projektai
-                    </button>
+                <section id="view-team" class="view-section">
+                    <div class="grid-2" style="margin-bottom: 30px;">
+                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 30px;">
+                            <h3 style="font-size: 1rem; color: var(--accent-color); letter-spacing: 2px; margin-bottom: 8px;">
+                                <i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> Pridėti Komandos Narį
+                            </h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                                Pridėti vartotojai galės prisijungti prie šios valdymo panelės su savo Google paskyra arba el. paštu.
+                            </p>
 
-                    <div class="workspace-header">
-                        <div>
-                            <h1 class="page-title" id="wsGalleryTitle" style="text-transform: none;"></h1>
-                            <p id="wsGallerySubtitle" style="font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-top:4px;"></p>
+                            <form id="form-add-admin" onsubmit="return false;">
+                                <label class="field-label" style="margin-top: 0;">El. Pašto Adresas *</label>
+                                <input type="email" id="team-add-email" class="form-input" placeholder="vartotojas@gmail.com" required>
+
+                                <label class="field-label">Vardas / Pastaba</label>
+                                <input type="text" id="team-add-name" class="form-input" placeholder="pvz. Asistentas / Fotografas">
+
+                                <label class="field-label">Rolė</label>
+                                <select id="team-add-role" class="form-select">
+                                    <option value="Administratorius">Administratorius (Pilna prieiga)</option>
+                                    <option value="Vadybininkas">Vadybininkas (Užklausų valdymas)</option>
+                                    <option value="Asistentas">Asistentas (Peržiūra)</option>
+                                </select>
+
+                                <button type="button" class="cta-button btn-solid" id="btn-add-admin" style="width: 100%; margin-top: 25px;">
+                                    <i class="fa-solid fa-check"></i> Suteikti Prieigą
+                                </button>
+                            </form>
                         </div>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <button class="cta-button" id="wsShareBtn"><i class="fa-solid fa-share-nodes"></i> Dalintis PIN</button>
-                            <button class="cta-button btn-solid" id="wsPreviewBtn"><i class="fa-solid fa-eye"></i> Kliento peržiūra</button>
-                            <button class="cta-button btn-solid" id="wsSendAccessBtn" style="background: var(--accent-light); border-color: var(--accent-light);"><i class="fa-solid fa-envelope"></i> Siųsti prieigą</button>
+
+                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 30px;">
+                            <h3 style="font-size: 1rem; color: var(--accent-color); letter-spacing: 2px; margin-bottom: 8px;">
+                                <i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Prieigos Taisyklės
+                            </h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">
+                                Pagrindiniai sistemos savininkai visada turi neatšaukiamą prieigą. Bet kuris pridėtas komandos narys gali prisijungti tiesiogiai naudodamasis „Prisijungti su Google“ mygtuku.
+                            </p>
+                            <div style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius); font-size: 0.85rem;">
+                                <p style="margin-bottom: 8px;"><b>Pagrindiniai administratoriai:</b></p>
+                                <ul style="padding-left: 20px; line-height: 1.8; color: var(--accent-light);">
+                                    <li>dominikphotofficial.lt@gmail.com</li>
+                                    <li>stock.dominikphotofficial.lt@gmail.com</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="tabs">
-                        <button class="tab-btn active" data-wstab="wsPhotosTab">Nuotraukos (<span id="wsPhotosCount">0</span>)</button>
-                        <button class="tab-btn" data-wstab="wsStoryTab">Aprašymas</button>
-                        <button class="tab-btn" data-wstab="wsSettingsTab">Nustatymai</button>
-                    </div>
-
-                    <div id="wsPhotosTab" class="tab-content active">
-                        <div class="top-toolbar" style="margin-bottom: 20px;">
-                            <div style="font-family:var(--font-heading); font-size:0.85rem; letter-spacing:2px; text-transform:uppercase;">
-                                Viso failų: <span id="wsPhotosBadge" style="color:var(--accent-color); font-weight:600;">0</span>
-                            </div>
-                            <div>
-                                <button class="cta-button btn-solid" id="wsUploadMoreBtn"><i class="fa-solid fa-cloud-arrow-up"></i> Įkelti kadrų</button>
-                                <input type="file" id="wsFileInput" multiple accept="image/*" style="display:none;">
-                            </div>
+                    <div class="data-table-card">
+                        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                            <h4 style="font-size: 0.85rem; letter-spacing: 2px; color: var(--accent-color);">Aktyvūs Komandos Nariai</h4>
                         </div>
-                        <div class="progress-indicator" id="wsUploadProgress">
-                            <div class="progress-bar-rail"><div class="progress-bar-thumb" id="wsProgressFill"></div></div>
-                            <p class="progress-caption" id="wsProgressText"></p>
-                        </div>
-                        <div class="photo-matrix" id="wsPhotosGrid"></div>
-                    </div>
-
-                    <div id="wsStoryTab" class="tab-content">
-                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: var(--radius); max-width: 800px;">
-                            <label class="field-label" style="margin-top: 0;">Fotosesijos istorija / Padėkos tekstas</label>
-                            <textarea id="wsStoryInput" class="form-textarea" style="height: 200px;"></textarea>
-                            <button class="cta-button btn-solid" id="wsSaveStoryBtn" style="margin-top: 20px;">Išsaugoti tekstą</button>
-                        </div>
-                    </div>
-
-                    <div id="wsSettingsTab" class="tab-content">
-                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: var(--radius); max-width: 800px;">
-                            <div class="grid-2">
-                                <div><label class="field-label" style="margin-top: 0;">Projekto pavadinimas</label><input type="text" id="wsSetTitle" class="form-input"></div>
-                                <div><label class="field-label" style="margin-top: 0;">Kategorija / Potėmė</label><input type="text" id="wsSetSubtitle" class="form-input"></div>
-                            </div>
-                            <div class="grid-2" style="margin-top: 15px;">
-                                <div><label class="field-label" style="margin-top: 0;">Client ID (Login)</label><input type="text" id="wsSetClientId" class="form-input" readonly style="background: var(--bg-color);"></div>
-                                <div><label class="field-label" style="margin-top: 0;">PIN kodas (Password)</label><input type="text" id="wsSetPin" class="form-input" maxlength="6"></div>
-                            </div>
-                            <div class="grid-2" style="margin-top: 15px;">
-                                <div><label class="field-label" style="margin-top: 0;">Kliento el. paštas</label><input type="email" id="wsSetEmail" class="form-input"></div>
-                                <div><label class="field-label" style="margin-top: 0;">Fotosesijos data</label><input type="date" id="wsSetDate" class="form-input"></div>
-                            </div>
-                            <div style="margin-top: 15px;">
-                                <label class="field-label" style="margin-top: 0;">ZIP archyvo nuoroda</label>
-                                <input type="url" id="wsSetZip" class="form-input" placeholder="https://...">
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px; flex-wrap:wrap; gap:15px;">
-                                <button class="cta-button btn-solid" id="wsSaveSettingsBtn">Išsaugoti pakeitimus</button>
-                                <button class="cta-button btn-danger" id="wsDeleteGalleryBtn">Ištrinti projektą</button>
-                            </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>El. Paštas</th>
+                                        <th>Vardas / Pastaba</th>
+                                        <th>Rolė</th>
+                                        <th>Pridėjimo Data</th>
+                                        <th style="text-align: right;">Veiksmai</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="team-table-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
 
                 <section id="view-settings" class="view-section">
-                    <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); max-width: 650px;">
-                        <div style="padding: 22px 30px; border-bottom: 1px solid var(--border-color);">
-                            <h3 style="font-size: 1rem; color: var(--accent-color); font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 2px;"><i class="fa-brands fa-telegram" style="color: var(--accent-light); margin-right: 8px;"></i> Telegram Bot Konfigūracija</h3>
+                    <div class="grid-2">
+                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius);">
+                            <div style="padding: 22px 30px; border-bottom: 1px solid var(--border-color);">
+                                <h3 style="font-size: 1rem; color: var(--accent-color); letter-spacing: 2px;"><i class="fa-brands fa-telegram" style="color: var(--accent-light); margin-right: 8px;"></i> Telegram Bot Konfigūracija</h3>
+                            </div>
+                            <div style="padding: 30px;">
+                                <label class="field-label" style="margin-top: 0;">Telegram Bot Token</label>
+                                <input type="password" id="setting-tg-token" class="form-input">
+                                <label class="field-label">Telegram Chat ID / Channel ID</label>
+                                <input type="text" id="setting-tg-chat-id" class="form-input">
+                                <div style="display: flex; gap: 12px; margin-top: 25px;">
+                                    <button class="cta-button btn-solid" id="btn-save-settings">Išsaugoti Parametrus</button>
+                                    <button class="cta-button" id="btn-test-telegram"><i class="fa-solid fa-paper-plane"></i> Testuoti Botą</button>
+                                </div>
+                            </div>
                         </div>
-                        <div style="padding: 30px;">
-                            <label class="field-label" style="margin-top: 0;">Telegram Bot Token</label>
-                            <input type="password" id="setting-tg-token" class="form-input">
-                            <label class="field-label">Telegram Chat ID / Channel ID</label>
-                            <input type="text" id="setting-tg-chat-id" class="form-input">
-                            <div style="display: flex; gap: 12px; margin-top: 25px;">
-                                <button class="cta-button btn-solid" id="btn-save-settings">Išsaugoti Parametrus</button>
-                                <button class="cta-button" id="btn-test-telegram"><i class="fa-solid fa-paper-plane"></i> Testuoti Botą</button>
+
+                        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius);">
+                            <div style="padding: 22px 30px; border-bottom: 1px solid var(--border-color);">
+                                <h3 style="font-size: 1rem; color: var(--accent-color); letter-spacing: 2px;"><i class="fa-brands fa-google" style="color: #4285F4; margin-right: 8px;"></i> Google & Auth Prieiga</h3>
+                            </div>
+                            <div style="padding: 30px;">
+                                <label class="field-label" style="margin-top: 0;">Firebase Auth Handler</label>
+                                <input type="text" class="form-input" readonly value="https://dominikphotofficial.lt/__/auth/handler" style="background: var(--bg-color); font-family: monospace; font-size: 0.85rem;">
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+                                    Ši nuoroda naudojama Google autentifikacijos patvirtinimui ir nukreipimui.
+                                </p>
+
+                                <label class="field-label" style="margin-top: 20px;">Dabartinė Paskyra</label>
+                                <div id="settings-current-user" style="font-weight: 600; color: var(--accent-color); font-size: 0.95rem;">-</div>
                             </div>
                         </div>
                     </div>
@@ -196,6 +319,7 @@
         </div>
     </div>
 
+    <!-- Lead Details Modal -->
     <div class="modal-overlay" id="modal-lead">
         <div class="modal-card" style="max-width: 850px;">
             <div class="modal-header">
@@ -239,12 +363,18 @@
                         <div>
                             <label class="field-label" style="margin-top: 0;">Keisti Būseną</label>
                             <select id="lead-modal-status-select" class="form-select">
-                                <option value="new">Naujas (New)</option><option value="in_progress">Vykdoma (In Progress)</option><option value="answered">Atsakyta (Answered)</option><option value="archived">Archyvas (Archived)</option>
+                                <option value="New">Naujas (New)</option>
+                                <option value="Pending">Laukiama (Pending)</option>
+                                <option value="In Progress">Vykdoma (In Progress)</option>
+                                <option value="Confirmed">Patvirtinta</option>
+                                <option value="Completed">Atlikta</option>
+                                <option value="Cancelled">Atšaukta</option>
+                                <option value="Archived">Archyvas (Archived)</option>
                             </select>
                         </div>
                         <div>
                             <label class="field-label" style="margin-top: 0;">Veiksmai</label>
-                            <button class="cta-button btn-solid" id="btn-create-portal-from-lead" style="width: 100%;"><i class="fa-solid fa-user-plus"></i> Sukurti Kliento Portalą</button>
+                            <button class="cta-button btn-solid" id="btn-lead-open-email" style="width: 100%;"><i class="fa-solid fa-envelope"></i> Siųsti Klientui Laišką</button>
                         </div>
                     </div>
                 </div>
@@ -256,6 +386,7 @@
         </div>
     </div>
 
+    <!-- Email Modal -->
     <div class="modal-overlay" id="email-modal">
         <div class="modal-card">
             <div class="modal-header">
@@ -263,53 +394,18 @@
                 <button class="action-icon-btn" onclick="closeModal('email-modal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
+                <label class="field-label" style="margin-top: 0;">Gavėjo El. Paštas</label>
+                <input type="email" id="modal-email-to" class="form-input" style="margin-bottom: 15px;">
+
                 <label class="field-label" style="margin-top: 0;">Tema (Subject)</label>
                 <input type="text" id="modal-subject" class="form-input" style="margin-bottom: 20px;">
+
                 <label class="field-label" style="margin-top: 0;">Laiško turinys (HTML)</label>
                 <textarea id="modal-html" class="form-textarea" style="height: 300px; font-family: monospace; font-size: 13px;"></textarea>
             </div>
             <div class="modal-footer">
                 <button class="cta-button" onclick="closeModal('email-modal')">Atšaukti</button>
                 <button class="cta-button btn-solid" id="modal-send-btn">Patvirtinti ir Siųsti</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="create-gallery-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Naujas Projektas (Kliento Portalas)</h3>
-                <button class="action-icon-btn" onclick="closeModal('create-gallery-modal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="grid-2">
-                    <div><label class="field-label" style="margin-top: 0;">Kliento Vardas / Pavadinimas *</label><input type="text" id="cgTitle" class="form-input" required></div>
-                    <div><label class="field-label" style="margin-top: 0;">Kliento El. Paštas</label><input type="email" id="cgEmail" class="form-input"></div>
-                </div>
-                <div class="grid-2" style="margin-top: 15px;">
-                    <div><label class="field-label" style="margin-top: 0;">Client ID (Login)</label><input type="text" id="cgClientId" class="form-input" readonly style="background: var(--bg-color);"></div>
-                    <div><label class="field-label" style="margin-top: 0;">PIN kodas (Password)</label><input type="text" id="cgPin" class="form-input" maxlength="6" required></div>
-                </div>
-                <div class="grid-2" style="margin-top: 15px;">
-                    <div><label class="field-label" style="margin-top: 0;">Kategorija</label><input type="text" id="cgSubtitle" class="form-input" required></div>
-                    <div><label class="field-label" style="margin-top: 0;">Fotosesijos data</label><input type="date" id="cgDate" class="form-input"></div>
-                </div>
-                
-                <label class="field-label" style="margin-top: 15px;">Nuotraukos (Prieš peržiūra)</label>
-                <div class="drop-box" id="cgDropBox">
-                    <p id="cgDropLabel">Tempkite nuotraukas čia arba spustelėkite</p>
-                    <input type="file" id="cgFileInput" multiple accept="image/*" style="display:none;">
-                </div>
-                <div class="ref-grid" id="cgPreviewGrid" style="margin-top: 10px;"></div>
-
-                <div class="progress-indicator" id="cgProgress">
-                    <div class="progress-bar-rail"><div class="progress-bar-thumb" id="cgProgressThumb"></div></div>
-                    <p class="progress-caption" id="cgProgressCaption"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="cta-button" onclick="closeModal('create-gallery-modal')">Atšaukti</button>
-                <button class="cta-button btn-solid" id="cgSubmitBtn">Sukurti portalą</button>
             </div>
         </div>
     </div>

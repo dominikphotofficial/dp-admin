@@ -50,6 +50,10 @@ const galleryBlockRU = `
 
 window.CONFIG = {
     ADMIN_EMAIL: "dominikphotofficial.lt@gmail.com",
+    ADMIN_EMAILS: [
+        "dominikphotofficial.lt@gmail.com",
+        "stock.dominikphotofficial.lt@gmail.com"
+    ],
     BRAND_NAME: "DP.PORTFOLIO",
     
     firebaseMain: {
